@@ -53,6 +53,9 @@ BSL                                 "\\".
 "&&"                        return 'and';
 "||"                        return 'or';
 "!"                         return 'not';
+"xml version="             return 'versionXML';
+"encoding="                 return 'encodingXML';
+"?"                         return 'interrogacion';
 
 /* Number literals */
 (([0-9]+"."[0-9]*)|("."[0-9]+))     return 'DoubleLiteral';
@@ -101,9 +104,13 @@ BSL                                 "\\".
 
 
 /* Definición de la gramática */
-START : RAICES EOF         { $$ = $1; return $$; }
+START : INICIO RAICES EOF         { $$ = $2; return $$; }
+        | RAICES EOF         { $$ = $1; return $$; }
     ;
 
+INICIO : lt interrogacion versionXML StringLiteral encodingXML StringLiteral interrogacion gt {console.log('version' + $4);}
+        
+;
 RAICES:
     RAICES RAIZ           { $1.push($2); $$ = $1;}
 	| RAIZ                { $$ = [$1]; } ;

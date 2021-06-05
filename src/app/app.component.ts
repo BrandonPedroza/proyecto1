@@ -22,7 +22,7 @@ export class AppComponent {
     this.httpClient = http;
     this.Tabs.push(this.contadorTabs);
 
-    this.parser = require("./JisonFiles/gramatica");
+    this.parser = require("./Gramatica/gramatica");
   
   }
   exec (input) {

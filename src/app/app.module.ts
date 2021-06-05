@@ -14,7 +14,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import {} from '../app/JisonFiles/gramatica.js';
+import {} from '../app/Gramatica/gramatica.js';
 
 @NgModule({
   declarations: [
