@@ -40,8 +40,8 @@ export class AppComponent {
   }
 
   Compilar() {
-    this.consoleValue += this.parser.parse(this.textValues[this.activeTab]) + "\r\n";
-
+    //this.consoleValue += this.parser.parse(this.textValues[this.activeTab]) + "\r\n";
+    console.log(this.parser.parse(this.textValues[this.activeTab]));
   }
 
   openFile(){
