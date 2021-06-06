@@ -1,4 +1,3 @@
-
 <div class="container">
   <mat-card class="example-card">
     <mat-card-header>
@@ -37,29 +36,37 @@
     </mat-card-header>
     <mat-card-content>
      
-      <form>
-        <div class="form-group">
-          <mat-tab-group #tabRef (selectedTabChange)="tabChanged(tabRef.selectedIndex)">
-            <mat-tab *ngFor="let item of Tabs;" label="Tab{{item}}">  
+     <div class="row">
+        <div class="col-md-6">
+          <form>
+            <div class="form-group">
+              <mat-tab-group #tabRef (selectedTabChange)="tabChanged(tabRef.selectedIndex)">
+                <mat-tab *ngFor="let item of Tabs;" label="Tab{{item}}">  
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Editor xPath:</label>
+                    <textarea style="resize: none;" id="Tab{{item}}"  [(ngModel)]="textValues[item]" class="form-control" id="exampleFormControlTextarea1" rows="15" [ngModelOptions]="{standalone: true}"></textarea>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+            
+          </form>
+        </div>
+        <div class="col-md-6">
+          <form>
+            <div class="form-group">
               <div class="form-group">
-                <label for="exampleFormControlTextarea1">Editor:</label>
-                <textarea style="resize: none;" id="Tab{{item}}"  [(ngModel)]="textValues[item]" class="form-control" id="exampleFormControlTextarea1" rows="15" [ngModelOptions]="{standalone: true}"></textarea>
+                <label for="txtXml">Editor XML:</label>
+                <textarea style="resize: none;"   [(ngModel)]="xmlText" class="form-control" id="txtXml" rows="17" [ngModelOptions]="{standalone: true}"></textarea>
               </div>
-            </mat-tab>
-            <!-- <mat-tab label="Second"> Content 2 
-                <div class="form-group">
-                  <label for="exampleFormControlTextarea1">Editor:</label> 
-                  <textarea style="resize: none;" class="form-control" id="exampleFormControlTextarea1" rows="15"></textarea>
-                </div>
-            </mat-tab>
-            <mat-tab label="Third"> Content 3 </mat-tab> -->
-          </mat-tab-group>
+            </div>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="exampleFormControlTextarea1">Consola:</label>
-          <textarea class="form-control" style="resize: none;" id="exampleFormControlTextarea1"   [(ngModel)]="consoleValue" rows="5" readonly [ngModelOptions]="{standalone: true}"></textarea>
-        </div>
-      </form>
+     </div>
+     <div class="form-group">
+      <label for="exampleFormControlTextarea1">Consola:</label>
+      <textarea class="form-control" style="resize: none;" id="exampleFormControlTextarea1"   [(ngModel)]="consoleValue" rows="5" readonly [ngModelOptions]="{standalone: true}"></textarea>
+    </div>
     </mat-card-content>
     <mat-card-actions>
       

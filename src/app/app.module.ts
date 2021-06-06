@@ -15,6 +15,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {} from '../app/Gramatica/gramatica.js';
+import {} from '../app/Gramatica/xpathGramatica.js';
 
 @NgModule({
   declarations: [

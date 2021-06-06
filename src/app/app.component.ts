@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-
+import {sentenciaXpath} from '../app/Estructuras/sentenciaXpath'
 declare var require: any;
 
 @Component({
@@ -16,14 +16,15 @@ export class AppComponent {
   contadorTabs = 1;
   activeTab = 1;
   parser;
+  xmlText = "";
   
   private httpClient: HttpClient;
   constructor(http: HttpClient) {
     this.httpClient = http;
     this.Tabs.push(this.contadorTabs);
 
-    this.parser = require("./Gramatica/gramatica");
-  
+    //this.parser = require("./Gramatica/gramatica");
+    this.parser = require("./Gramatica/xpathGramatica");
   }
   exec (input) {
     return this.parser.parse(input);
@@ -41,7 +42,9 @@ export class AppComponent {
 
   Compilar() {
     //this.consoleValue += this.parser.parse(this.textValues[this.activeTab]) + "\r\n";
-    console.log(this.parser.parse(this.textValues[this.activeTab]));
+    var res = this.parser.parse(this.textValues[this.activeTab]);
+    //let output = res as sentenciaXpath;
+    //this.consoleValue += output.Tipo; 
   }
 
   openFile(){
@@ -61,7 +64,7 @@ export class AppComponent {
   _handleReaderLoaded(e) {
     console.log(e);
     let reader = e.target;
-    this.textValues[this.activeTab] = reader.result;
+    this.xmlText = reader.result;
   }
 
   expFile() {
