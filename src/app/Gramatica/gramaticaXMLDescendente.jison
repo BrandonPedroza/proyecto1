@@ -13,9 +13,6 @@ acceptedcharssingle                 [^\'\\]
 stringsingle                        {escape}|{acceptedcharssingle}
 charliteral                         \'{stringsingle}\'
 
-charLiteralMulti                    \'{stringsingle}*\'
-
-
 BSL                                 "\\".
 %s                                  comment
 %%
@@ -25,7 +22,6 @@ BSL                                 "\\".
 <comment>"-->"                       this.popState();
 <comment>.                          /* skip comment content*/
 \s+                                 /* skip whitespace */
-
 
 "print"                     return 'print';
 "null"                      return 'null';
@@ -57,10 +53,6 @@ BSL                                 "\\".
 "&&"                        return 'and';
 "||"                        return 'or';
 "!"                         return 'not';
-"xml"                       return 'rxml';
-"version"                   return 'rversion';
-"encoding"                  return 'rencoding';
-"?"                         return 'interrogacion';
 
 /* Number literals */
 (([0-9]+"."[0-9]*)|("."[0-9]+))     return 'DoubleLiteral';
@@ -68,9 +60,9 @@ BSL                                 "\\".
 
 [a-zA-Z_][a-zA-Z0-9_ñÑ]*            return 'identifier';
 
-{stringliteral}                     return 'StringLiteral';
-{charliteral}                       return 'CharLiteral';
-{charLiteralMulti}                  return 'charLiteralMulti';
+{stringliteral}                     return 'StringLiteral'
+{charliteral}                       return 'CharLiteral'
+
 //error lexico
 .                                   {
                                         console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
@@ -109,18 +101,22 @@ BSL                                 "\\".
 
 
 /* Definición de la gramática */
-START : INICIO RAICES EOF         { $$ = $2; return $$; }
-        | RAICES EOF         { $$ = $1; return $$; }
+START : RAICES EOF         { $$ = $1; return $$; }
     ;
-
-INICIO : lt interrogacion rxml rversion asig StringLiteral rencoding asig StringLiteral interrogacion gt {console.log('version' + $6);}
-        
-;
-
+/*
 RAICES:
     RAICES RAIZ           { $1.push($2); $$ = $1;}
 	| RAIZ                { $$ = [$1]; } ;
+*/
+RAICES:
+    RAIZ RAICESP           { $2.push($1); $$ = $2;}
+	;
 
+RAICESP:
+     RAIZ RAICESP          { $2.push($1); $$ = $2;}
+    |                      { $$ = []; }
+    ;
+ 
 RAIZ:
     PRINT semicolon       { $$ = $1 }
     | OBJETO              { $$ = $1 }
@@ -132,6 +128,19 @@ OBJETO:
     | lt identifier LATRIBUTOS div gt                                          { $$ = new Objeto($2,'',@1.first_line, @1.first_column,$3,[]); }
 ;
 
+/*
+OBJETO:
+      lt identifier LATRIBUTOS OBJ 
+;
+OBJ: gt OBJ2 lt div identifier gt 
+    |div gt
+;
+
+OBJ2:
+     OBJETOS
+    |LISTA_ID_OBJETO 
+
+;*/
 LATRIBUTOS: ATRIBUTOS                               { $$ = $1; }
            |                                        { $$ = []; }
 ;
@@ -141,25 +150,54 @@ ATRIBUTOS:
     | ATRIBUTO                                      { $$ = [$1]; } 
 ;
 
+
+/*
+
+ATRIBUTOS:
+    ATRIBUTO ATRIBUTOSP           { $2.push($1); $$ = $2;}
+;
+ATRIBUTOP:
+     ATRIBUTO ATRIBUTOP          { $2.push($1); $$ = $2;}
+    |                            { $$ = []; }
+;
+*/
 ATRIBUTO: 
-    identifier asig STR_CHR                   { $$ = new Atributo($1, $3, @1.first_line, @1.first_column); }
+    identifier asig StringLiteral                   { $$ = new Atributo($1, $3, @1.first_line, @1.first_column); }
+;
+/*
+LISTA_ID_OBJETO: LISTA_ID_OBJETO identifier          { $1=$1 + ' ' +$2 ; $$ = $1;}
+        | identifier                                 { $$ = $1 }
+;
+*/
+
+LISTA_ID_OBJETO:  ID LISTA_ID_OBJETOP         { $2=$1 + ' '+ $2 ; $$ = $2;}
+        
 ;
 
-STR_CHR:   StringLiteral               { $$ = $1 }
-        |  charLiteralMulti            { $$ = $1 };
-
-LISTA_ID_OBJETO: LISTA_ID_OBJETO ID          { $1=$1 + ' ' +$2 ; $$ = $1;}
-        | ID                                 { $$ = $1 }
-;
+LISTA_ID_OBJETOP:  ID LISTA_ID_OBJETOP          { $2=$1 + ' ' + $2 ; $$ = $2;}
+                |                               { $$ = ''; }
+; 
 
 ID:           identifier      { $$ = $1 }
             | DoubleLiteral   { $$ = $1 }
             | IntegerLiteral  { $$ = $1 }
 ;
 
+
 OBJETOS:
       OBJETOS OBJETO        { $1.push($2); $$ = $1;}
 	| OBJETO                { $$ = [$1]; } ;
+/*
+OBJETOS:
+    RAIZ OBJETOSP           //{ $$ = $2; $2.push($1);}
+;
+
+OBJETOSP:
+     RAIZ OBJETOSP         // { $$ = $2; $2.push($1);}
+    |                         //{ $$ = []; }
+;
+
+*/
 
 PRINT:
     print lparen EXPR rparen            { $$ = new Print($3, @1.first_line, @1.first_column); } ;
