@@ -1,12 +1,12 @@
 import {parametroXpath} from './parametroXpath';
-
+import {NodoXpath} from './NodoXpath';
 export class sentenciaXpath {
-    name = "";
-    Tipo = "";
+    Tipo:NodoXpath;
     Parametro: parametroXpath;
-    
-    constructor(tipo:string, parametro:parametroXpath){
+    Padre:sentenciaXpath;
+    constructor(tipo:NodoXpath, parametro:parametroXpath, padre:sentenciaXpath){
         this.Tipo = tipo;
         this.Parametro = parametro;
+        this.Padre = padre;
     }
 }

@@ -1,11 +1,27 @@
 export enum TipoParametro {
-    SimpleFunction ,
-    Funtion,
-    Node,
-    Param,
-    Empty
+    Entero ,
+    Decimal,
+    Funtion_Last,
+    Funtion_Position,
+    DosPuntos,
+    Punto,
+    Atributo,
+    Cadena,
+    Nodo
   }
-
+  export enum TipoNodo {
+    Raiz = "RAIZ",
+    Descendiente = "DESCENDIENTE",
+    ID = "ID",
+    Axis = "AXIS",
+    AutoReferencia = "AUTOREFERENCIA",
+    Asterisco = "ASTERISCO",
+    NodoPadre = "NODO_PADRE",
+    Atributo = "ATRIBUTO",
+    Funcion_Node = "Funcion_Node",
+    Funcion_Text = "Funcion_Text"
+    
+  }
   export enum TipoOperador{
     Mas,
     Menos,

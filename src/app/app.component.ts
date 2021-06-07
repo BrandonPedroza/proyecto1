@@ -10,41 +10,27 @@ declare var require: any;
 })
 export class AppComponent {
   title = 'proyecto1';
-  Tabs = [];
-  textValues = [];
+  txtXpath = "";
   consoleValue = "";
-  contadorTabs = 1;
-  activeTab = 1;
   parser;
   xmlText = "";
   
   private httpClient: HttpClient;
   constructor(http: HttpClient) {
     this.httpClient = http;
-    this.Tabs.push(this.contadorTabs);
-
     //this.parser = require("./Gramatica/gramatica");
     this.parser = require("./Gramatica/xpathGramatica");
   }
   exec (input) {
     return this.parser.parse(input);
 }
-  CrearTab() {
-    this.contadorTabs++;
-    this.Tabs.push(this.contadorTabs);
-    this.textValues.push();
-  }
-
-  tabChanged(id) {
-    this.activeTab = id+1;
-    console.log(id);
-  }
-
+ 
   Compilar() {
     //this.consoleValue += this.parser.parse(this.textValues[this.activeTab]) + "\r\n";
-    var res = this.parser.parse(this.textValues[this.activeTab]);
-    //let output = res as sentenciaXpath;
-    //this.consoleValue += output.Tipo; 
+    var res = this.parser.parse(this.txtXpath);
+    let output = res as sentenciaXpath;
+    console.log(output);
+    this.consoleValue += output.Tipo; 
   }
 
   openFile(){
@@ -68,8 +54,8 @@ export class AppComponent {
   }
 
   expFile() {
-    var fileName = "Tab" + this.activeTab+".txt";
-    this.saveTextAsFile(this.textValues[this.activeTab] , fileName);
+    var fileName = "xml.txt";
+    this.saveTextAsFile(this.xmlText , fileName);
     }
     saveTextAsFile (data, filename){
 
