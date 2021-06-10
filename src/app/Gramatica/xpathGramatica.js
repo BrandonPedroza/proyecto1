@@ -75,8 +75,8 @@ var xpathGramatica = (function(){
 var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,6],$V1=[1,7],$V2=[1,8],$V3=[1,9],$V4=[1,10],$V5=[1,11],$V6=[1,14],$V7=[1,15],$V8=[1,16],$V9=[1,17],$Va=[1,18],$Vb=[1,19],$Vc=[1,20],$Vd=[1,21],$Ve=[1,22],$Vf=[1,23],$Vg=[1,24],$Vh=[1,25],$Vi=[1,26],$Vj=[5,7],$Vk=[1,38],$Vl=[1,39],$Vm=[1,31],$Vn=[1,36],$Vo=[1,34],$Vp=[1,35],$Vq=[1,41],$Vr=[1,42],$Vs=[1,40],$Vt=[5,7,13,14,15,16,17,18,22,23,27,53,54,55,56,57,58,59,60,61,62,63,64,65],$Vu=[2,27],$Vv=[1,44],$Vw=[5,7,13,14,15,16,17,18,22,23,24,27,53,54,55,56,57,58,59,60,61,62,63,64,65],$Vx=[1,58],$Vy=[1,54],$Vz=[1,55],$VA=[1,59],$VB=[1,60],$VC=[1,57],$VD=[1,61],$VE=[1,62],$VF=[5,7,13,14,15,16,17,18,22,23,24,26,27,36,37,38,39,40,41,42,43,44,45,46,47,53,54,55,56,57,58,59,60,61,62,63,64,65],$VG=[1,67],$VH=[1,65],$VI=[1,66],$VJ=[1,68],$VK=[1,69],$VL=[1,70],$VM=[1,71],$VN=[1,72],$VO=[1,73],$VP=[1,74],$VQ=[1,75],$VR=[1,76],$VS=[16,26,36,37,38,39,40,41,42,43,44,45,46,47],$VT=[26,36,37,40,41,42,43,44,45,46,47],$VU=[26,40,41,42,43,44,45,46,47];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"expressions":3,"XPath":4,"EOF":5,"LSENTENCIA":6,"operador_logico":7,"SENTENCIA":8,"NODO_PREDICABLE":9,"predicate":10,"NODO_NO_PREDICABLE":11,"NODO":12,"barras":13,"/":14,"nodename":15,"*":16,"..":17,".":18,"AXIS":19,"ATRIBUTO":20,"FUNCION_NO_OPERABLE":21,"node":22,"text":23,"[":24,"PARAMETRO":25,"]":26,"arroba":27,"FUNCION_OPERABLE":28,"last":29,"lparen":30,"rparen":31,"position":32,"numberLiteral":33,"OPERACION":34,"string":35,"+":36,"-":37,"mod":38,"div":39,"<=":40,">=":41,">":42,"<":43,"=":44,"!=":45,"and":46,"or":47,"DoubleLiteral":48,"IntegerLiteral":49,"NOMBRE_AXIS":50,":":51,"PARAMETRO_AXIS":52,"ancestor":53,"ancestor-or-self":54,"attribute":55,"child":56,"descendant":57,"descendant-or-self":58,"following":59,"following-sibling":60,"namespace":61,"parent":62,"preceding":63,"preceding-sibling":64,"self":65,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",7:"operador_logico",13:"barras",14:"/",15:"nodename",16:"*",17:"..",18:".",22:"node",23:"text",24:"[",26:"]",27:"arroba",29:"last",30:"lparen",31:"rparen",32:"position",35:"string",36:"+",37:"-",38:"mod",39:"div",40:"<=",41:">=",42:">",43:"<",44:"=",45:"!=",46:"and",47:"or",48:"DoubleLiteral",49:"IntegerLiteral",51:":",53:"ancestor",54:"ancestor-or-self",55:"attribute",56:"child",57:"descendant",58:"descendant-or-self",59:"following",60:"following-sibling",61:"namespace",62:"parent",63:"preceding",64:"preceding-sibling",65:"self"},
+symbols_: {"error":2,"expressions":3,"XPath":4,"EOF":5,"LSENTENCIA":6,"|":7,"SENTENCIA":8,"NODO_PREDICABLE":9,"predicate":10,"NODO_NO_PREDICABLE":11,"NODO":12,"barras":13,"/":14,"nodename":15,"*":16,"..":17,".":18,"AXIS":19,"ATRIBUTO":20,"FUNCION_NO_OPERABLE":21,"node":22,"text":23,"[":24,"PARAMETRO":25,"]":26,"arroba":27,"FUNCION_OPERABLE":28,"last":29,"lparen":30,"rparen":31,"position":32,"numberLiteral":33,"OPERACION":34,"string":35,"+":36,"-":37,"mod":38,"div":39,"<=":40,">=":41,">":42,"<":43,"=":44,"!=":45,"and":46,"or":47,"DoubleLiteral":48,"IntegerLiteral":49,"NOMBRE_AXIS":50,":":51,"PARAMETRO_AXIS":52,"ancestor":53,"ancestor-or-self":54,"attribute":55,"child":56,"descendant":57,"descendant-or-self":58,"following":59,"following-sibling":60,"namespace":61,"parent":62,"preceding":63,"preceding-sibling":64,"self":65,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",7:"|",13:"barras",14:"/",15:"nodename",16:"*",17:"..",18:".",22:"node",23:"text",24:"[",26:"]",27:"arroba",29:"last",30:"lparen",31:"rparen",32:"position",35:"string",36:"+",37:"-",38:"mod",39:"div",40:"<=",41:">=",42:">",43:"<",44:"=",45:"!=",46:"and",47:"or",48:"DoubleLiteral",49:"IntegerLiteral",51:":",53:"ancestor",54:"ancestor-or-self",55:"attribute",56:"child",57:"descendant",58:"descendant-or-self",59:"following",60:"following-sibling",61:"namespace",62:"parent",63:"preceding",64:"preceding-sibling",65:"self"},
 productions_: [0,[3,2],[4,1],[6,3],[6,1],[8,3],[8,2],[8,2],[12,1],[12,1],[12,1],[12,1],[12,1],[12,1],[12,1],[9,1],[9,1],[9,1],[9,1],[9,1],[9,1],[11,1],[11,1],[11,1],[21,1],[21,1],[10,3],[10,0],[20,2],[20,2],[28,3],[28,3],[25,1],[25,1],[25,1],[25,1],[25,1],[25,1],[25,1],[25,1],[34,3],[34,3],[34,3],[34,3],[34,3],[34,3],[34,3],[34,3],[34,3],[34,3],[34,3],[34,3],[34,3],[33,1],[33,1],[19,4],[50,1],[50,1],[50,1],[50,1],[50,1],[50,1],[50,1],[50,1],[50,1],[50,1],[50,1],[50,1],[50,1],[52,1],[52,1],[52,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
@@ -84,14 +84,17 @@ performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* actio
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
- typeof console !== 'undefined' ? console.log($$[$0-1]) : print($$[$0-1]);
+ salida = []; typeof console !== 'undefined' ? console.log($$[$0-1]) : print($$[$0-1]);
           return $$[$0-1]; 
 break;
 case 2:
-return $$[$0];
+this.$ = salida; salida = []; return this.$;
 break;
-case 4: case 14: case 16: case 21: case 28: case 29: case 32: case 33: case 56: case 57: case 58: case 59: case 60: case 61: case 62: case 63: case 64: case 65: case 66: case 67: case 68: case 70:
-this.$ = $$[$0];
+case 3:
+ salida.push($$[$0]);
+break;
+case 4:
+  salida.push($$[$0]);
 break;
 case 5:
 this.$ = new sentenciaXpath($$[$0-1],$$[$0],$$[$0-2]);
@@ -124,6 +127,9 @@ this.$ = new NodoXpath(TipoNodo.NodoPadre,$$[$0],null);
 break;
 case 13: case 19:
 this.$ = new NodoXpath(TipoNodo.AutoReferencia,$$[$0],null);
+break;
+case 14: case 16: case 21: case 28: case 29: case 32: case 33: case 56: case 57: case 58: case 59: case 60: case 61: case 62: case 63: case 64: case 65: case 66: case 67: case 68: case 70:
+this.$ = $$[$0];
 break;
 case 17:
 this.$ = new NodoXpath(TipoNodo.Atributo,$$[$0],null);
@@ -210,7 +216,7 @@ case 54:
 this.$ = new ParametroOperacionXpath(null,$$[$0],TipoParametro.Entero);
 break;
 case 55:
-this.$ = new NodoXpath(TipoNodo.Axis,$$[$0-3],$$[$0]); console.log($$[$0]);
+this.$ = new NodoXpath(TipoNodo.Axis,$$[$0-3],$$[$0]); 
 break;
 }
 },
@@ -369,7 +375,7 @@ parse: function parse(input) {
         const {OperacionXpath} = require("../Estructuras/OperacionXpath.js");
         const {NodoXpath} = require("../Estructuras/NodoXpath.js");
         const {TipoParametro, TipoOperador, TipoNodo} = require("../Estructuras/tipificacion.js");
-     
+        let salida = [];
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){
 var lexer = ({
@@ -706,19 +712,19 @@ case 2:return 29;
 break;
 case 3:return 32;
 break;
-case 4:return 36;
+case 4:return 39;
 break;
-case 5:return 37;
+case 5:return 38;
 break;
-case 6:return 16;
+case 6:return 36;
 break;
-case 7:return 13;
+case 7:return 37;
 break;
-case 8:return 14;
+case 8:return 16;
 break;
-case 9:return 38;
+case 9:return 13;
 break;
-case 10:return 39;
+case 10:return 14;
 break;
 case 11:return 40;
 break;
@@ -756,7 +762,7 @@ case 27:return 27;
 break;
 case 28:return 46;
 break;
-case 29:return '|';
+case 29:return 7;
 break;
 case 30:return 30;
 break;
@@ -812,7 +818,7 @@ case 54:
 break;
 }
 },
-rules: [/^(?:[.\n]+)/,/^(?:\s+)/,/^(?:last\b)/,/^(?:position\b)/,/^(?:\+)/,/^(?:-)/,/^(?:\*)/,/^(?:\/\/)/,/^(?:\/)/,/^(?:mod\b)/,/^(?:div\b)/,/^(?:<=)/,/^(?:>=)/,/^(?:<)/,/^(?:>)/,/^(?:=)/,/^(?:==)/,/^(?:!=)/,/^(?:and\b)/,/^(?:or\b)/,/^(?:!)/,/^(?:\.\.)/,/^(?:\.)/,/^(?::)/,/^(?:;)/,/^(?:\[)/,/^(?:\])/,/^(?:@)/,/^(?:&&)/,/^(?:\|)/,/^(?:\()/,/^(?:\))/,/^(?:ancestor\b)/,/^(?:ancestor-or-self\b)/,/^(?:attribute\b)/,/^(?:child\b)/,/^(?:descendant\b)/,/^(?:descendant-or-self\b)/,/^(?:following\b)/,/^(?:following-sibling\b)/,/^(?:namespace\b)/,/^(?:parent\b)/,/^(?:preceding\b)/,/^(?:preceding-sibling\b)/,/^(?:self\b)/,/^(?:(([0-9]+\.[0-9]*)|(\.[0-9]+)))/,/^(?:[0-9]+)/,/^(?:"[^\"]*")/,/^(?:[a-zA-Z_][a-zA-Z0-9_ñÑ]*)/,/^(?:{stringliteral})/,/^(?:{charliteral})/,/^(?:node\(\))/,/^(?:text\(\))/,/^(?:$)/,/^(?:.)/],
+rules: [/^(?:[.\n]+)/,/^(?:\s+)/,/^(?:last\b)/,/^(?:position\b)/,/^(?:div\b)/,/^(?:mod\b)/,/^(?:\+)/,/^(?:-)/,/^(?:\*)/,/^(?:\/\/)/,/^(?:\/)/,/^(?:<=)/,/^(?:>=)/,/^(?:<)/,/^(?:>)/,/^(?:=)/,/^(?:==)/,/^(?:!=)/,/^(?:and\b)/,/^(?:or\b)/,/^(?:!)/,/^(?:\.\.)/,/^(?:\.)/,/^(?::)/,/^(?:;)/,/^(?:\[)/,/^(?:\])/,/^(?:@)/,/^(?:&&)/,/^(?:\|)/,/^(?:\()/,/^(?:\))/,/^(?:ancestor\b)/,/^(?:ancestor-or-self\b)/,/^(?:attribute\b)/,/^(?:child\b)/,/^(?:descendant\b)/,/^(?:descendant-or-self\b)/,/^(?:following\b)/,/^(?:following-sibling\b)/,/^(?:namespace\b)/,/^(?:parent\b)/,/^(?:preceding\b)/,/^(?:preceding-sibling\b)/,/^(?:self\b)/,/^(?:(([0-9]+\.[0-9]*)|(\.[0-9]+)))/,/^(?:[0-9]+)/,/^(?:"[^\"]*")/,/^(?:[a-zA-Z_][a-zA-Z0-9_ñÑ]*)/,/^(?:{stringliteral})/,/^(?:{charliteral})/,/^(?:node\(\))/,/^(?:text\(\))/,/^(?:$)/,/^(?:.)/],
 conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54],"inclusive":true}}
 });
 return lexer;

@@ -13,13 +13,15 @@
 \s+                   /* skip whitespace */
 "last"                            return 'last';
 "position"                        return 'position';
+"div"                         return 'div';
+"mod"                             return 'mod';
 "+"                         return '+';
 "-"                         return '-';
 "*"                         return '*';
 "//"                         return 'barras';
 "/"                         return '/';
-"mod"                         return 'mod';
-"div"                         return 'div';
+
+
 "<="                        return '<=';
 ">="                        return '>=';
 "<"                         return '<';
@@ -84,7 +86,7 @@
         const {OperacionXpath} = require("../Estructuras/OperacionXpath.js");
         const {NodoXpath} = require("../Estructuras/NodoXpath.js");
         const {TipoParametro, TipoOperador, TipoNodo} = require("../Estructuras/tipificacion.js");
-     
+        let salida = [];
 %}
 
 // DEFINIMOS PRESEDENCIA DE OPERADORES
@@ -102,17 +104,17 @@
 %start expressions
 
 %% /* language grammar */
-
+       
 expressions
-    : XPath EOF
-        { typeof console !== 'undefined' ? console.log($1) : print($1);
+    : XPath EOF 
+        { salida = []; typeof console !== 'undefined' ? console.log($1) : print($1);
           return $1; }
     ;
 
-XPath : LSENTENCIA {return $1;};
+XPath : LSENTENCIA {$$ = salida; salida = []; return $$;};
 
-LSENTENCIA: LSENTENCIA operador_logico SENTENCIA
-        | SENTENCIA {$$ = $1;};
+LSENTENCIA: LSENTENCIA '|' SENTENCIA { salida.push($3);}
+        | SENTENCIA {  salida.push($1);};
 
 
 SENTENCIA : SENTENCIA NODO_PREDICABLE predicate  {$$ = new sentenciaXpath($2,$3,$1);}
@@ -181,7 +183,7 @@ PARAMETRO :FUNCION_OPERABLE  {$$ = $1;}
 OPERACION: PARAMETRO '+' PARAMETRO {$$ = new OperacionXpath($1,$3,TipoOperador.Mas);}
         |PARAMETRO '-' PARAMETRO {$$ = new OperacionXpath($1,$3,TipoOperador.Menos);}
         |PARAMETRO '*' PARAMETRO {$$ = new OperacionXpath($1,$3,TipoOperador.Por);}
-        |PARAMETRO 'mod' PARAMETRO {$$ = new OperacionXpath($1,$3,TipoOperador.Mod);}
+        |PARAMETRO mod PARAMETRO {$$ = new OperacionXpath($1,$3,TipoOperador.Mod);}
         |PARAMETRO 'div' PARAMETRO {$$ = new OperacionXpath($1,$3,TipoOperador.Div);}
         |PARAMETRO '<=' PARAMETRO {$$ = new OperacionXpath($1,$3,TipoOperador.MenorIgual);}
         |PARAMETRO '>=' PARAMETRO {$$ = new OperacionXpath($1,$3,TipoOperador.MayorIgual);}

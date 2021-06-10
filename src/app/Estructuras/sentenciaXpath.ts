@@ -4,9 +4,10 @@ export class sentenciaXpath {
     Tipo:NodoXpath;
     Parametro: parametroXpath;
     Padre:sentenciaXpath;
+    Hijo:sentenciaXpath;
     constructor(tipo:NodoXpath, parametro:parametroXpath, padre:sentenciaXpath){
         this.Tipo = tipo;
         this.Parametro = parametro;
         this.Padre = padre;
-    }
+    } 
 }
