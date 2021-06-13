@@ -118,7 +118,7 @@ LSENTENCIA: LSENTENCIA '|' SENTENCIA { salida.push($3);}
 
 
 SENTENCIA : SENTENCIA NODO_PREDICABLE predicate  {$$ = new sentenciaXpath($2,$3,$1);}
-        | SENTENCIA NODO_NO_PREDICABLE  {$$ = new sentenciaXpath($2,null,$1);}
+        | SENTENCIA NODO_NO_PREDICABLE  {$$ = new sentenciaXpath($2,null,$1); console.log('.. encontrado');}
         | NODO predicate 
                         {      
                                 if($1 != TipoNodo.ID && $2 != null) {console.log("Error toquen no debe llever predicado");}
@@ -133,7 +133,7 @@ NODO : barras {$$ = new NodoXpath(TipoNodo.Descendiente,$1,null);}
         | '/' {$$ = new NodoXpath(TipoNodo.Raiz,$1,null);}
         | nodename {$$ = new NodoXpath(TipoNodo.ID,$1,null);}
         | '*' {$$ = new NodoXpath(TipoNodo.Asterisco,$1,null);}
-        | '..' {$$ = new NodoXpath(TipoNodo.NodoPadre,$1,null);}
+        | '..' {$$ = new NodoXpath(TipoNodo.NodoPadre,$1,null); console.log('.. encontrado');}
         | '.' {$$ = new NodoXpath(TipoNodo.AutoReferencia,$1,null);}
         |AXIS {$$ = $1;}
         ;
@@ -141,7 +141,7 @@ NODO : barras {$$ = new NodoXpath(TipoNodo.Descendiente,$1,null);}
 NODO_PREDICABLE: nodename {$$ = new NodoXpath(TipoNodo.ID,$1,null);}
         | AXIS  {$$ = $1;}
         | ATRIBUTO  {$$ = new NodoXpath(TipoNodo.Atributo,$1,null);}
-        | '..' {$$ = new NodoXpath(TipoNodo.NodoPadre,$1,null);}
+        | '..' {$$ = new NodoXpath(TipoNodo.NodoPadre,$1,null); console.log('.. encontrado');}
         | '.' {$$ = new NodoXpath(TipoNodo.AutoReferencia,$1,null);}
         | '*' {$$ = new NodoXpath(TipoNodo.Asterisco,$1,null);}
         ;

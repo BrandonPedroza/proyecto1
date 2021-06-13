@@ -123,7 +123,7 @@ case 11: case 20: case 71:
 this.$ = new NodoXpath(TipoNodo.Asterisco,$$[$0],null);
 break;
 case 12: case 18:
-this.$ = new NodoXpath(TipoNodo.NodoPadre,$$[$0],null);
+this.$ = new NodoXpath(TipoNodo.NodoPadre,$$[$0],null); console.log('.. encontrado');
 break;
 case 13: case 19:
 this.$ = new NodoXpath(TipoNodo.AutoReferencia,$$[$0],null);
