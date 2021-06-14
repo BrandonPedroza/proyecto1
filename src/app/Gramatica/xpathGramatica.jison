@@ -11,6 +11,19 @@
 [.\n]+      /* skip over text not in quotes */
 
 \s+                   /* skip whitespace */
+"ancestor"                          return 'ancestor';
+"ancestor-or-self"                  return 'ancestor-or-self';
+"attribute"                         return 'attribute';
+"child"                             return 'child';
+"descendant"                        return 'descendant';
+"descendant-or-self"                return 'descendant-or-self';
+"following"                         return 'following';
+"following-sibling"                 return 'following-sibling';
+"namespace"                         return 'namespace';
+"parent"                            return 'parent';
+"preceding"                         return 'preceding';
+"preceding-sibling"                 return 'preceding-sibling';
+"self"                              return 'self';
 "last"                            return 'last';
 "position"                        return 'position';
 "div"                         return 'div';
@@ -45,19 +58,7 @@
 "|"                        return '|';
 "("                        return 'lparen';
 ")"                        return 'rparen';
-"ancestor"                          return 'ancestor';
-"ancestor-or-self"                  return 'ancestor-or-self';
-"attribute"                         return 'attribute';
-"child"                             return 'child';
-"descendant"                        return 'descendant';
-"descendant-or-self"                return 'descendant-or-self';
-"following"                         return 'following';
-"following-sibling"                 return 'following-sibling';
-"namespace"                         return 'namespace';
-"parent"                            return 'parent';
-"preceding"                         return 'preceding';
-"preceding-sibling"                 return 'preceding-sibling';
-"self"                              return 'self';
+
 
 (([0-9]+"."[0-9]*)|("."[0-9]+))     return 'DoubleLiteral';
 [0-9]+                              return 'IntegerLiteral';
@@ -206,18 +207,18 @@ AXIS: NOMBRE_AXIS  ':'':' PARAMETRO_AXIS {$$ = new NodoXpath(TipoNodo.Axis,$1,$4
 ;
 
 
-NOMBRE_AXIS : 'ancestor' {$$ = $1;} 
-        |'ancestor-or-self'  {$$ = $1;} 
+NOMBRE_AXIS :'ancestor-or-self'  {$$ = $1;} 
+        | 'ancestor' {$$ = $1;} 
         |'attribute' {$$ = $1;} 
         |'child' {$$ = $1;} 
+        |'descendant' '-' 'or' '-' 'self'{$$ = 'descendant-or-self';} 
         |'descendant' {$$ = $1;} 
-        |'descendant-or-self'{$$ = $1;} 
-        |'following' {$$ = $1;} 
         |'following-sibling' {$$ = $1;} 
+        |'following' {$$ = $1;} 
         |'namespace'  {$$ = $1;} 
         |'parent' {$$ = $1;} 
-        |'preceding' {$$ = $1;} 
         |'preceding-sibling'{$$ = $1;} 
+        |'preceding' {$$ = $1;} 
         |'self'{$$ = $1;}  ;
 
 PARAMETRO_AXIS : nodename {$$ = new NodoXpath(TipoNodo.ID,$1,null);}

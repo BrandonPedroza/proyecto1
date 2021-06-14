@@ -1,14 +1,17 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.Objeto = void 0;
-class Objeto {
-    constructor(id, texto, linea, columna, listaAtributos, listaO) {
+var Objeto = /** @class */ (function () {
+    function Objeto(id, texto, linea, columna, listaAtributos, listaO, Tipo, Padre) {
         this.identificador = id;
         this.texto = texto;
         this.linea = linea;
         this.columna = columna;
         this.listaAtributos = listaAtributos;
         this.listaObjetos = listaO;
+        this.tipo = Tipo;
+        this.padre = Padre;
     }
-}
+    return Objeto;
+}());
 exports.Objeto = Objeto;

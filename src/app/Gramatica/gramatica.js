@@ -102,13 +102,13 @@ case 7: case 16: case 17: case 19: case 20: case 21: case 22: case 26: case 27:
  this.$ = $$[$0] 
 break;
 case 8:
- this.$ = new Objeto($$[$0-7],'',_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6],$$[$0-4]); 
+ this.$ = new Objeto($$[$0-7],'',_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6],$$[$0-4],0,null); $$[$0-4].forEach(element => {element.padre = this.$;}); 
 break;
 case 9:
- this.$ = new Objeto($$[$0-7],$$[$0-4],_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6],[]); 
+ this.$ = new Objeto($$[$0-7],$$[$0-4],_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6],[],0,null); 
 break;
 case 10:
- this.$ = new Objeto($$[$0-3],'',_$[$0-4].first_line, _$[$0-4].first_column,$$[$0-2],[]); 
+ this.$ = new Objeto($$[$0-3],'',_$[$0-4].first_line, _$[$0-4].first_column,$$[$0-2],[],1,null); 
 break;
 case 11:
  this.$ = $$[$0]; 

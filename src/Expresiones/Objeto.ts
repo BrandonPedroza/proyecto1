@@ -7,13 +7,16 @@ export class Objeto{
     listaObjetos: Array<Objeto>;
     linea: number;
     columna: number;
-
-    constructor(id:string, texto:string, linea:number, columna:number, listaAtributos:Array<Atributo>, listaO:Array<Objeto>){
+    tipo: number;
+    padre: Objeto;
+    constructor(id:string, texto:string, linea:number, columna:number, listaAtributos:Array<Atributo>, listaO:Array<Objeto>,Tipo:number,Padre:Objeto){
         this.identificador = id;
         this.texto = texto;
         this.linea = linea;
         this.columna = columna;
         this.listaAtributos = listaAtributos;
-        this.listaObjetos = listaO
+        this.listaObjetos = listaO;
+        this.tipo = Tipo;
+        this.padre = Padre;
     }
 }
