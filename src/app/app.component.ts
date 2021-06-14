@@ -7,6 +7,8 @@ import { OperacionXpath } from './Estructuras/OperacionXpath';
 import { ParametroOperacionXpath } from './Estructuras/ParametroOperacionXpath';
 import { parametroXpath } from './Estructuras/parametroXpath';
 import {TipoParametro, TipoOperador, TipoNodo} from './Estructuras/tipificacion';
+import { graphviz }  from 'd3-graphviz';
+import {crearArbolDot} from './AST/crearArbolDot';
 declare var require: any;
 
 @Component({
@@ -22,6 +24,8 @@ export class AppComponent {
   listaDescendientes:string[] = [];
   xmlOriginal:Objeto[];
   parserXml;
+  astXML;
+  arbol;
   xmlText = `<?xml version="1.0" encoding="UTF-8"?>
   <biblioteca>
     <libro>
@@ -47,6 +51,8 @@ export class AppComponent {
     //this.parser = require("./Gramatica/gramatica");
     this.parser = require("./Gramatica/xpathGramatica");
     this.parserXml = require("./Gramatica/gramatica");
+    this.astXML= require("./Gramatica/gramaticaXMLAsc_Arbol");
+    this.arbol=require("./AST/crearArbolDot");
   }
 
   Compilar() {
@@ -932,5 +938,24 @@ export class AppComponent {
           a.dispatchEvent(e);
       }
   }
+
+  d3() {
+    graphviz('#graph').width(500);
+    graphviz('#graph').height(750);
+      graphviz('#graph').renderDot('digraph {a -> b}');
+    }
+    dibujar(){
+      graphviz('#graph').width(500);
+    graphviz('#graph').height(750);
+    
+      const objetos = this.astXML.parse(this.xmlText);    
+    console.log('objetos almacenados--->', objetos);
+    const arbol = new this.arbol.CrearArbolDot();
+    //console.log(arbol);   
+    var recorrido=arbol.recorrerHijos(objetos[1]);
+    console.log(recorrido);
+    graphviz('#graph').renderDot('digraph {'+recorrido+'}');
+
+    }
 
 }
