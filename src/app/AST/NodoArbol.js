@@ -1,21 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NodoArbol = void 0;
-class NodoArbol{
+exports.Nodo_Arbol = void 0;
+class Nodo_Arbol{
     constructor(valor, tipo){
         this.id=0;
         this.valor=valor;
         this.tipo=tipo;
         this.hijos=[];
     }
-    getValor(){
+    get_Valor(){
         this.valor;
     }
-    getTipo(){
+    get_Tipo(){
         this.tipo;
     }
-    agregarHijo(hijo){
+    agregar_hijo(hijo){
         this.hijos.push(hijo);
     }
 }
-exports.NodoArbol = NodoArbol;
+exports.Nodo_Arbol = Nodo_Arbol;

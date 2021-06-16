@@ -26,6 +26,8 @@ export class AppComponent {
   parserXml;
   astXML;
   arbol;
+  rgxmlasc;
+  tablaXML="";
   xmlText = `<?xml version="1.0" encoding="UTF-8"?>
   <biblioteca>
     <libro>
@@ -954,8 +956,23 @@ export class AppComponent {
     //console.log(arbol);   
     var recorrido=arbol.recorrerHijos(objetos[1]);
     console.log(recorrido);
+    this.rgxmlasc=objetos[2].arreglo_elementos;
     graphviz('#graph').renderDot('digraph {'+recorrido+'}');
+console.log();
+    }
 
+    generarReporteGramaticalXML(){
+     /* var data= this.rgxmlasc;
+    var table = "";
+
+		for (var i = 0; i < data.length; i++){
+			var row = `<tr>
+							<td>${data[i].Produccion}</td>
+                            <td>${data[i].Regla_}</td>
+					  </tr>`;
+			table += row;
+		}
+    this.tablaXML=table;*/
     }
 
 }
