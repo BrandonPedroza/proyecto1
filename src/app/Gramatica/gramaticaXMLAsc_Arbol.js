@@ -85,199 +85,219 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
 
-            var root = new NodoArbol("START","");
-                    root.agregarHijo($$[$0-1][1]);
+            reportegramatical_.agregar_Elemento(`START -> RAICES `,"START.val = RAICES.val");
+            var root = new Nodo_Arbol("START","");
+                    root.agregar_hijo($$[$0-1][1]);
                     console.log("TODO BIEN, TODO CORRECTO :D!! (Version 2)");
-                    this.$ = [$$[$0-1][0], root];
+                    this.$ = [$$[$0-1][0], root,reportegramatical_];
                     return this.$;
         
 break;
 case 2:
 
-            nodoAux = new NodoArbol("RAICES","");                                  
-                                            nodoAux.agregarHijo($$[$0][1]);
-                                            $$[$0-1][1].agregarHijo(nodoAux);
-                                            $$[$0-1][0].push($$[$0][0]); 
-                                            this.$ = [$$[$0-1][0],$$[$0-1][1]]; 
+            reportegramatical_.agregar_Elemento(`RAICES -> RAICES OBJETO`,"RAICES.val := RAICES.push(OBJETO.val)");
+            nodo_actual = new Nodo_Arbol("RAICES","");                                  
+            nodo_actual.agregar_hijo($$[$0][1]);
+            $$[$0-1][1].agregar_hijo(nodo_actual);
+            $$[$0-1][0].push($$[$0][0]); 
+            this.$ = [$$[$0-1][0],$$[$0-1][1]]; 
         
 break;
 case 3:
 
-            nodoAux = new NodoArbol("ListaObjetosRaiz","");
-                                        nodoAux.agregarHijo($$[$0][1]);
-                                        this.$ = [[$$[$0][0]],nodoAux];
+            reportegramatical_.agregar_Elemento(`RAICES -> OBJETO`,"RAICES.val := OBJETO.val");
+            nodo_actual = new Nodo_Arbol("OBJETO","");
+            nodo_actual.agregar_hijo($$[$0][1]);
+            this.$ = [[$$[$0][0]],nodo_actual];
         
 break;
 case 4:
 
-        nodoAux = new NodoArbol("UN_OBJETO","");
-                nodoAux.agregarHijo(new NodoArbol($$[$0-10],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-9],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-8],"palabra reservada"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-7],"palabra reservada"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-6],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-5],"cadena"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-4],"palabra reservada"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-3],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-2],"cadena"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-1],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0],"simbolo"));
-                objeto = new Objeto("version","version",$$[$0-2][0],_$[$0-10].first_line, _$[$0-10].first_column,[],[]);
-                this.$ = [objeto,nodoAux];
+        reportegramatical_.agregar_Elemento(`OBJETO -> "<" "?" "xml" "version" "=" cadena "encoding" "=" cadena "?" ">"`,"OBJETO.val := new Objeto(encoding, null, null)");
+        nodo_actual = new Nodo_Arbol("UN_OBJETO","");
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-10],"menor"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-9],"interrogacion"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-8],"RESERVADA"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-7],"RESERVADA"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-6],"igual"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-5],"cadena"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-4],"palabra reservada"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-3],"igual"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-2],"cadena"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-1],"interrogacion"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0],"mayor"));
+        objeto = new Objeto("version","version",$$[$0-2][0],_$[$0-10].first_line, _$[$0-10].first_column,[],[]);
+        this.$ = [objeto,nodo_actual];
         
     
 break;
 case 5:
  
-        nodoAux = new NodoArbol("UN_OBJETO","");
-                nodoAux.agregarHijo(new NodoArbol($$[$0-8],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-7],"identificador"));
-                nodoAux.agregarHijo($$[$0-6][1]);
-                nodoAux.agregarHijo(new NodoArbol($$[$0-5],"simbolo"));
-                nodoAux.agregarHijo($$[$0-4][1]);
-                nodoAux.agregarHijo(new NodoArbol($$[$0-3],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-2],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-1],"identificador"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0],"simbolo"));
-                objeto = new Objeto($$[$0-7],$$[$0-1],'',_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6][0],$$[$0-4][0]);
-                this.$ = [objeto,nodoAux];
+        reportegramatical_.agregar_Elemento(`OBJETO -> "<" id LATRIBUTOS ">" OBJETOS "<" / id>`,"OBJETO.val := new Objeto(id.val,LATRIBUTOS.val,OBJETOS.val)");
+        nodo_actual = new Nodo_Arbol("UN_OBJETO","");
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-8],"menor"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-7],"identificador"));
+        nodo_actual.agregar_hijo($$[$0-6][1]);
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-5],"mayor"));
+        nodo_actual.agregar_hijo($$[$0-4][1]);
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-3],"menor"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-2],"diagonal"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-1],"identificador"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0],"mayor"));
+        objeto = new Objeto($$[$0-7],$$[$0-1],'',_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6][0],$$[$0-4][0]);
+        this.$ = [objeto,nodo_actual];
        // this.$ = new Objeto($$[$0-7],'',_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6],$$[$0-4]); 
     
 break;
 case 6:
  //this.$ = new Objeto($$[$0-7],$$[$0-4],_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6],[]); 
-        nodoAux = new NodoArbol("UN_OBJETO","");
-                nodoAux.agregarHijo(new NodoArbol($$[$0-8],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-7],"identificador"));
-                nodoAux.agregarHijo($$[$0-6][1]);
-                nodoAux.agregarHijo(new NodoArbol($$[$0-5],"simbolo"));
-                nodoAux.agregarHijo($$[$0-4][1]);
-                nodoAux.agregarHijo(new NodoArbol($$[$0-3],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-2],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-1],"identificador"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0],"simbolo"));
-                objeto = new Objeto($$[$0-7],$$[$0-1],$$[$0-4][0],_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6][0],[]);
-                this.$ = [objeto,nodoAux];
+        reportegramatical_.agregar_Elemento(`OBJETOS -> "<" id LATRIBUTOS ">" LISTA_ID_OBJETO "<" / id>`,"OBJETO.val := new Objeto(id.val,LATRIBUTOS.val,LISTA_ID_OBJETO.val)");
+        nodo_actual = new Nodo_Arbol("UN_OBJETO","");
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-8],"menor"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-7],"identificador"));
+        nodo_actual.agregar_hijo($$[$0-6][1]);
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-5],"mayor"));
+        nodo_actual.agregar_hijo($$[$0-4][1]);
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-3],"menor"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-2],"diagonal"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-1],"identificador"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0],"mayor"));
+        objeto = new Objeto($$[$0-7],$$[$0-1],$$[$0-4][0],_$[$0-8].first_line, _$[$0-8].first_column,$$[$0-6][0],[]);
+        this.$ = [objeto,nodo_actual];
     
 break;
 case 7:
  //this.$ = new Objeto($$[$0-3],'',_$[$0-4].first_line, _$[$0-4].first_column,$$[$0-2],[]); 
-        nodoAux = new NodoArbol("ObjetoRaiz","");
-                nodoAux.agregarHijo(new NodoArbol($$[$0-4],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0-3],"identificador"));
-                nodoAux.agregarHijo($$[$0-2][1]);
-                nodoAux.agregarHijo(new NodoArbol($$[$0-1],"simbolo"));
-                nodoAux.agregarHijo(new NodoArbol($$[$0],"simbolo"));
-                objeto = new Objeto($$[$0-3],$$[$0-3],'',_$[$0-4].first_line, _$[$0-4].first_column,$$[$0-2][0],[]);
-                this.$ = [objeto,nodoAux];
+        reportegramatical_.agregar_Elemento(`OBJETO -> "<" id LATRIBUTOS />`,"OBJETO.val := new Objeto(id.val,LATRIBUTOS.val,null)");
+        nodo_actual = new Nodo_Arbol("UN_OBJETO","");
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-4],"menor"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-3],"identificador"));
+        nodo_actual.agregar_hijo($$[$0-2][1]);
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-1],"diagonal"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0],"mayor"));
+        objeto = new Objeto($$[$0-3],$$[$0-3],'',_$[$0-4].first_line, _$[$0-4].first_column,$$[$0-2][0],[]);
+        this.$ = [objeto,nodo_actual];
     
 break;
 case 8:
  
     //this.$ = $$[$0]; 
-    nodoAux = new NodoArbol("ListaAtributos","");
-                          nodoAux.agregarHijo($$[$0][1]);
-                          this.$ = [$$[$0][0], nodoAux]; 
+        reportegramatical_.agregar_Elemento(`LATRIBUTOS -> ATRIBUTOS`,"LATRIBUTOS.val := ATRIBUTOS.val");
+        nodo_actual = new Nodo_Arbol("LATRIBUTOS","");
+        nodo_actual.agregar_hijo($$[$0][1]);
+        this.$ = [$$[$0][0], nodo_actual]; 
     
 break;
 case 9:
  
         //this.$ = []; 
-    nodoAux = new NodoArbol("ListaAtributos","");
-                    nodoAux.agregarHijo(new NodoArbol("E","simbolo"));
-                    this.$ = [[], nodoAux]; 
+        reportegramatical_.agregar_Elemento(`LATRIBUTOS -> ε`,"LATRIBUTOS.val := []");
+        nodo_actual = new Nodo_Arbol("EPSILON","");
+        nodo_actual.agregar_hijo(new Nodo_Arbol("E","epsilon"));
+        this.$ = [[], nodo_actual]; 
     
 break;
 case 10:
 
-        nodoAux = new NodoArbol("Atributos","");                                  
-                                  nodoAux.agregarHijo($$[$0][1]);
-                                  $$[$0-1][1].agregarHijo(nodoAux);
-                                  $$[$0-1][0].push($$[$0][0]); 
-                                  this.$ = [$$[$0-1][0],$$[$0-1][1]];
+       reportegramatical_.agregar_Elemento(`ATRIBUTOS -> ATRIBUTOS ATRIBUTO`,"ATRIBUTOS.val := ATRIBUTOS.push(ATRIBUTOS.val)");
+        nodo_actual = new Nodo_Arbol("ATRIBUTOS","");                                  
+        nodo_actual.agregar_hijo($$[$0][1]);
+        $$[$0-1][1].agregar_hijo(nodo_actual);
+        $$[$0-1][0].push($$[$0][0]); 
+        this.$ = [$$[$0-1][0],$$[$0-1][1]];
         // $$[$0-1].push($$[$0]); this.$ = $$[$0-1];
     
 break;
 case 11:
 
-        //this.$ = [$$[$0]]; 
-        nodoAux = new NodoArbol("Atributos","");
-                                  nodoAux.agregarHijo($$[$0][1]);
-                                  this.$ = [[$$[$0][0]],nodoAux];
+        //this.$ = [$$[$0]];  
+        reportegramatical_.agregar_Elemento(`ATRIBUTOS -> ATRIBUTO`,"ATRIBUTOS.val := ATRIBUTO.val");
+        nodo_actual = new Nodo_Arbol("ATRIBUTO","");
+        nodo_actual.agregar_hijo($$[$0][1]);
+        this.$ = [[$$[$0][0]],nodo_actual];
     
 break;
 case 12:
  
+        reportegramatical_.agregar_Elemento(`ATRIBUTO -> id "=" STR_CHR`,"ATRIBUTO.val := new Atributo(id.val,STR_CHR.val)");
         //this.$ = new Atributo($$[$0-2], $$[$0], _$[$0-2].first_line, _$[$0-2].first_column); 
-        nodoAux = new NodoArbol("Atributo","");
-        nodoAux.agregarHijo(new NodoArbol($$[$0-2],"identificador"));
-        nodoAux.agregarHijo(new NodoArbol($$[$0-1],"simbolo"));
-        nodoAux.agregarHijo($$[$0][1]);
+        nodo_actual = new Nodo_Arbol("ATRIBUTO","");
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-2],"identificador"));
+        nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0-1],"asignacion"));
+        nodo_actual.agregar_hijo($$[$0][1]);
         atributo = new Atributo($$[$0-2], $$[$0], _$[$0-2].first_line, _$[$0-2].first_column);
-        this.$ = [atributo,nodoAux]; 
+        this.$ = [atributo,nodo_actual]; 
     
 break;
 case 13:
  
             //this.$ = $$[$0] 
-            nodoAux = new NodoArbol($$[$0],"cadena");
-                        this.$ = [$$[$0], nodoAux]; 
+            reportegramatical_.agregar_Elemento(`STR_CHR -> cadenaString`,`STR_CHR.val := cadenaString.lexval`);
+            nodo_actual = new Nodo_Arbol($$[$0],"cadena");
+            this.$ = [$$[$0], nodo_actual]; 
         
 break;
 case 14:
  
-            nodoAux = new NodoArbol($$[$0],"cadenaChar");
-                        this.$ = [$$[$0], nodoAux]; 
+            reportegramatical_.agregar_Elemento(`STR_CHR -> cadenaChar`,`STR_CHR.val := cadenaChar.lexval`);
+            nodo_actual = new Nodo_Arbol($$[$0],"cadenaChar");
+            this.$ = [$$[$0], nodo_actual]; 
             //this.$ = $$[$0] 
         
 break;
 case 15:
  
-                    nodoAux = new NodoArbol("LISTA_ID_TEXTO","");
-                        nodoAux.agregarHijo($$[$0][1]);
-                        $$[$0-1][1].agregarHijo(nodoAux);
-                        $$[$0-1][0] = $$[$0-1][0] + " " + $$[$0][0];
-                        this.$ = [$$[$0-1][0],$$[$0-1][1]]; 
+                    reportegramatical_.agregar_Elemento(`LISTA_ID_OBJETO -> LISTA_ID_OBJETO ID`,`LISTA_ID_OBJETO.val := LISTA_ID_OBJETO.val + " " + ID.val`);
+                    nodo_actual = new Nodo_Arbol("LISTA_ID_TEXTO","");
+                    nodo_actual.agregar_hijo($$[$0][1]);
+                    $$[$0-1][1].agregar_hijo(nodo_actual);
+                    $$[$0-1][0] = $$[$0-1][0] + " " + $$[$0][0];
+                    this.$ = [$$[$0-1][0],$$[$0-1][1]]; 
                     //$$[$0-1]=$$[$0-1] + ' ' +$$[$0] ; this.$ = $$[$0-1];
                 
 break;
 case 16:
  
-                    nodoAux = new NodoArbol("ID_TEXTO","");
-                   nodoAux.agregarHijo($$[$0][1]);
-                   this.$ = [$$[$0][0],nodoAux];
+                    reportegramatical_.agregar_Elemento(`LISTA_ID_OBJETOS -> ID`,`LISTA_ID_OBJETOS.val := ID.val`);
+                    nodo_actual = new Nodo_Arbol("ID_TEXTO","");
+                    nodo_actual.agregar_hijo($$[$0][1]);
+                    this.$ = [$$[$0][0],nodo_actual];
                     //this.$ = $$[$0] 
                 
 break;
 case 17:
   
-                nodoAux = new NodoArbol("IDENTIFICADOR","");
-                nodoAux.agregarHijo(new NodoArbol($$[$0],"texto"));
-                this.$ = [$$[$0],nodoAux];
+                reportegramatical_.agregar_Elemento(`id -> identificador`,`ID.val := identificador.lexval`);
+                nodo_actual = new Nodo_Arbol("IDENTIFICADOR","");
+                nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0],"texto"));
+                this.$ = [$$[$0],nodo_actual];
                 //this.$ = $$[$0] 
             
 break;
 case 18:
  
-                nodoAux = new NodoArbol("DOUBLE","");
-                nodoAux.agregarHijo(new NodoArbol($$[$0],"texto"));
-                this.$ = [$$[$0],nodoAux];
+                reportegramatical_.agregar_Elemento(`ID -> double`,`ID.val := double.lexval`);
+                nodo_actual = new Nodo_Arbol("DOUBLE","");
+                nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0],"texto"));
+                this.$ = [$$[$0],nodo_actual];
                 //this.$ = $$[$0] 
             
 break;
 case 19:
  
-                nodoAux = new NodoArbol("INTEGER","");
-                nodoAux.agregarHijo(new NodoArbol($$[$0],"texto"));
-                this.$ = [$$[$0],nodoAux];
+                reportegramatical_.agregar_Elemento(`ID -> integer`,`ID.val := integer.lexval`);
+                nodo_actual = new Nodo_Arbol("INTEGER","");
+                nodo_actual.agregar_hijo(new Nodo_Arbol($$[$0],"texto"));
+                this.$ = [$$[$0],nodo_actual];
                 //this.$ = $$[$0] 
             
 break;
 case 20:
 
-        nodoAux = new NodoArbol("OBJETOS","");                                  
-        nodoAux.agregarHijo($$[$0][1]);
-        $$[$0-1][1].agregarHijo(nodoAux);
+        reportegramatical_.agregar_Elemento("OBJETOS -> OBJETOS Objeto","OBJETOS.val := OBJETOS.val.push(OBJETO.val)");
+        nodo_actual = new Nodo_Arbol("OBJETOS","");                                  
+        nodo_actual.agregar_hijo($$[$0][1]);
+        $$[$0-1][1].agregar_hijo(nodo_actual);
         $$[$0-1][0].push($$[$0][0]); 
         this.$ = [$$[$0-1][0],$$[$0-1][1]];
         //$$[$0-1].push($$[$0]); this.$ = $$[$0-1];
@@ -285,9 +305,10 @@ case 20:
 break;
 case 21:
 
-        nodoAux = new NodoArbol("OBJETO","");
-        nodoAux.agregarHijo($$[$0][1]);
-        this.$ = [[$$[$0][0]],nodoAux];  
+        reportegramatical_.agregar_Elemento("OBJETOS -> OBJETO","OBJETOS.val := OBJETO.val");
+        nodo_actual = new Nodo_Arbol("OBJETO","");
+        nodo_actual.agregar_hijo($$[$0][1]);
+        this.$ = [[$$[$0][0]],nodo_actual];  
         // this.$ = [$$[$0]]; 
     
 break;
@@ -447,7 +468,11 @@ parse: function parse(input) {
     const {Operacion, Operador} = require("../Expresiones/Operacion");
     const {Objeto} = require("../Expresiones/Objeto");
     const {Atributo} = require("../Expresiones/Atributo");
-    const {NodoArbol} = require("../AST/NodoArbol");
+    const {Nodo_Arbol} = require("../AST/NodoArbol");
+    const {ReporteGramatical} = require("../AST/ReporteGramatical");
+
+    var reportegramatical_ = new ReporteGramatical();
+
 
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){
