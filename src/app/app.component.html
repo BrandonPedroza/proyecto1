@@ -30,9 +30,10 @@
                       <mat-icon>menu_book</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                      <button mat-menu-item>
-                        <span>Resporte 1</span>
+                      <button mat-menu-item (click)="openTablaSimbolos()"> 
+                        <span>Tabla de Simbolos</span>
                       </button>
+                      
                       <button mat-menu-item>
                         <span>Reporte 2</span>
                       </button>
@@ -88,5 +89,6 @@
       </tr>
       </table>
   </div>
+
 
 </div>

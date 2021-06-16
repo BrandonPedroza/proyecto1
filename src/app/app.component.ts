@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ParsedProperty } from '@angular/compiler';
-import { Component } from '@angular/core';
+import { Component, Inject} from '@angular/core';
 import { observable } from 'rxjs';
 import {sentenciaXpath} from '../app/Estructuras/sentenciaXpath'
 import {Objeto} from '../Expresiones/Objeto'
@@ -10,6 +10,8 @@ import { parametroXpath } from './Estructuras/parametroXpath';
 import {TipoParametro, TipoOperador, TipoNodo} from './Estructuras/tipificacion';
 import { graphviz }  from 'd3-graphviz';
 import {crearArbolDot} from './AST/crearArbolDot';
+import {MatDialog} from '@angular/material/dialog';
+import {TablaSimbolosComponent} from '../app/Reportes/tabla-simbolos/tabla-simbolos.component';
 declare var require: any;
 
 @Component({
@@ -18,11 +20,14 @@ declare var require: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+ 
   title = 'proyecto1';
   txtXpath = `/catalog/book[@id="bk101"]/./*/text()`;
   consoleValue = "";
   parser;
   retroceder = true;
+  showTablaSimbolo = true;
   listaDescendientes:sentenciaXpath[] = [];
   xmlOriginal:Objeto[];
   parserXml;
@@ -50,7 +55,7 @@ export class AppComponent {
   </biblioteca>`;
   
   private httpClient: HttpClient;
-  constructor(http: HttpClient) {
+  constructor(http: HttpClient,public dialog: MatDialog) {
     this.httpClient = http;
     //this.parser = require("./Gramatica/gramatica");
     this.parser = require("./Gramatica/xpathGramatica");
@@ -89,6 +94,15 @@ export class AppComponent {
     //elementoActual en este momento es la raiz de la entrada Xpath
    
     
+  }
+  openTablaSimbolos() {
+    var xmlObject = this.parserXml.parse(this.xmlText) as Objeto[];
+    var lista = [];
+    lista.push(xmlObject);
+    this.dialog.open(TablaSimbolosComponent, {
+      data: lista,
+      maxHeight: '80%'
+    });
   }
 
   ProcesarNodoRaiz(raiz:sentenciaXpath, xml:Objeto[],padre:Objeto[]):string{

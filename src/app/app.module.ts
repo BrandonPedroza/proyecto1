@@ -18,9 +18,13 @@ import { HttpClientModule } from '@angular/common/http';
 import {} from '../app/Gramatica/gramatica.js';
 import {} from '../app/Gramatica/xpathGramatica.js';
 import {TipoNodo,TipoOperador,TipoParametro} from '../app/Estructuras/tipificacion';
+import { TablaSimbolosComponent } from './Reportes/tabla-simbolos/tabla-simbolos.component';
+import { MatDialogModule } from '@angular/material/dialog';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TablaSimbolosComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +39,8 @@ import {TipoNodo,TipoOperador,TipoParametro} from '../app/Estructuras/tipificaci
     MatFormFieldModule,
     FormsModule,
     HttpClientModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
