@@ -7,7 +7,8 @@ export enum TipoParametro {
     Punto,
     Atributo,
     Cadena,
-    Nodo
+    Nodo,
+    Operacion
   }
   export enum TipoNodo {
     Raiz = "RAIZ",

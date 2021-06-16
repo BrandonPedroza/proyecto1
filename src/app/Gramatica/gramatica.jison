@@ -27,13 +27,9 @@ BSL                                 "\\".
 \s+                                 /* skip whitespace */
 
 
-"print"                     return 'print';
-"null"                      return 'null';
-"true"                      return 'true';
-"false"                     return 'false';
+
 
 "+"                         return 'plus';
-"-"                         return 'minus';
 "*"                         return 'times';
 "/"                         return 'div';
 "%"                         return 'mod';
@@ -57,20 +53,27 @@ BSL                                 "\\".
 "&&"                        return 'and';
 "||"                        return 'or';
 "!"                         return 'not';
-"xml"                       return 'rxml';
 "version"                   return 'rversion';
 "encoding"                  return 'rencoding';
+"&amp"                      return 'amp'
+"&lt"                      return  'rlt'
+"&gt"                      return  'rgt'
+"&apos"                      return 'apos'
+"&quot"                      return 'quot'
 "?"                         return 'interrogacion';
 
 /* Number literals */
 (([0-9]+"."[0-9]*)|("."[0-9]+))     return 'DoubleLiteral';
 [0-9]+                              return 'IntegerLiteral';
 
-[a-zA-Z_][a-zA-Z0-9_ñÑ]*            return 'identifier';
+
 
 {stringliteral}                     return 'StringLiteral';
+[a-zA-Z0-9áéíúóàèìòÁÉÍÓÚÀÈÌÒÙñÑ_!@#$%+^'`"*()/¡:;.,~-¤Ã-]+            return 'identifier';
 {charliteral}                       return 'CharLiteral';
 {charLiteralMulti}                  return 'charLiteralMulti';
+
+"-"                         return 'minus';
 //error lexico
 .                                   {
                                         console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
@@ -109,11 +112,15 @@ BSL                                 "\\".
 
 
 /* Definición de la gramática */
-START : INICIO RAICES EOF         { $$ = $2; return $$; }
+START : INICIO RAICES EOF         { $1.listaObjetos = $2; $$ = $1; return $$; }
         | RAICES EOF         { $$ = $1; return $$; }
     ;
 
-INICIO : lt interrogacion rxml rversion asig StringLiteral rencoding asig StringLiteral interrogacion gt {console.log('version' + $6);}
+INICIO : lt interrogacion identifier rversion asig StringLiteral rencoding asig StringLiteral interrogacion gt 
+{   var atr = [];
+    atr.push(new Atributo('encoding', $9, @9.first_line, @9.first_column));
+    $$ = new Objeto('Encabezado','',@1.first_line, @1.first_column,atr,[],0,null);
+}
         
 ;
 
@@ -153,10 +160,17 @@ LISTA_ID_OBJETO: LISTA_ID_OBJETO ID          { $1=$1 + ' ' +$2 ; $$ = $1;}
 ;
 
 ID:           identifier      { $$ = $1 }
+            | RESERVED_WORD   { $$ = $1 }
             | DoubleLiteral   { $$ = $1 }
             | IntegerLiteral  { $$ = $1 }
 ;
 
+RESERVED_WORD : amp semicolon   { $$ = '&' }
+        | rlt semicolon         { $$ = '<' }
+        | rgt semicolon         { $$ = '>' }
+        | apos semicolon        { $$ = '\'' }
+        | quot semicolon        { $$ = '"' }
+        ;
 OBJETOS:
       OBJETOS OBJETO        { $1.push($2); $$ = $1;}
 	| OBJETO                { $$ = [$1]; } ;
@@ -184,6 +198,4 @@ PRIMITIVA:
     | DoubleLiteral                     { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
     | StringLiteral                     { $$ = new Primitivo($1, @1.first_line, @1.first_column); }
     | charliteral                       { $$ = new Primitivo($1, @1.first_line, @1.first_column); }
-    | null                              { $$ = new Primitivo(null, @1.first_line, @1.first_column); }
-    | true                              { $$ = new Primitivo(true, @1.first_line, @1.first_column); }
-    | false                             { $$ = new Primitivo(false, @1.first_line, @1.first_column); } ;
+     ;

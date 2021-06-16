@@ -12,6 +12,7 @@ var TipoParametro;
     TipoParametro[TipoParametro["Atributo"] = 6] = "Atributo";
     TipoParametro[TipoParametro["Cadena"] = 7] = "Cadena";
     TipoParametro[TipoParametro["Nodo"] = 8] = "Nodo";
+    TipoParametro[TipoParametro["Operacion"] = 9] = "Operacion";
 })(TipoParametro = exports.TipoParametro || (exports.TipoParametro = {}));
 var TipoNodo;
 (function (TipoNodo) {

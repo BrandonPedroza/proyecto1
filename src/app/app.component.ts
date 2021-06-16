@@ -19,32 +19,135 @@ declare var require: any;
 })
 export class AppComponent {
   title = 'proyecto1';
-  txtXpath = "/biblioteca/libro/fechaPublicacion[@año=1969]";
+  txtXpath = `/catalog/book[@id="bk101"]/./*/text()`;
   consoleValue = "";
   parser;
+  retroceder = true;
   listaDescendientes:sentenciaXpath[] = [];
   xmlOriginal:Objeto[];
   parserXml;
   astXML;
   arbol;
-  xmlText = `<?xml version="1.0" encoding="UTF-8"?>
-  <biblioteca>
-    <libro>
-      <titulo>La vida esta en otra parte</titulo>
-      <autor>Milan Kundera</autor>
-      <fechaPublicacion año="1973"/>
-    </libro>
-    <libro>
-      <titulo>Pantaleon y las visitadoras</titulo>
-      <autor fechaNacimiento="28/03/1936">Mario Vargas Llosa</autor>
-      <fechaPublicacion año="1973"/>
-    </libro>
-    <libro>
-      <titulo>Conversacion en la catedral</titulo>
-      <autor fechaNacimiento="28/03/1936">Mario Vargas Llosa</autor>
-      <fechaPublicacion año="1969"/>
-    </libro>
-  </biblioteca>`;
+  xmlText = `<?xml version="1.0" encoding="ISO-8859-1"?>
+  <catalog>
+     <book id="bk101">
+        <author>GÃ¡mbardellÃ¤, MÃ¡tthew</author>
+        <title>XML Developer&apos;s Guide</title>
+        <genre>Computer</genre>
+        <price>44.95</price>
+        <publish_date>2000-10-01</publish_date>
+        <description>An in-depth look at creating applications 
+        with XML.</description>
+     </book>
+     <book id="bk102">
+        <author>Ralls, Kim</author>
+        <title>Midnight Rain</title>
+        <genre>Fantasy</genre>
+        <price>5.95</price>
+        <publish_date>2000-12-16</publish_date>
+        <description>A former architect battles corporate zombies, 
+        an evil sorceress, and her own childhood to become queen 
+        of the world.</description>
+     </book>
+     <book id="bk103">
+        <author>Corets, Eva</author>
+        <title>Maeve Ascendant</title>
+        <genre>Fantasy</genre>
+        <price>5.95</price>
+        <publish_date>2000-11-17</publish_date>
+        <description>After the collapse of a nanotechnology 
+        society in England, the young survivors lay the 
+        foundation for a new society.</description>
+     </book>
+     <book id="bk104">
+        <author>Corets, Eva</author>
+        <title>Oberon's Legacy</title>
+        <genre>Fantasy</genre>
+        <price>5.95</price>
+        <publish_date>2001-03-10</publish_date>
+        <description>In post-apocalypse England, the mysterious 
+        agent known only as Oberon helps to create a new life 
+        for the inhabitants of London. Sequel to Maeve 
+        Ascendant.</description>
+     </book>
+     <book id="bk105">
+        <author>Corets, Eva</author>
+        <title>The Sundered Grail</title>
+        <genre top="cali">Fantasy</genre>
+        <price>5.95</price>
+        <publish_date>2001-09-10</publish_date>
+        <description>The two daughters of Maeve, half-sisters, 
+        battle one another for control of England. Sequel to 
+        Oberon's Legacy.</description>
+     </book>
+     <book id="bk106">
+        <author>Randall, Cynthia</author>
+        <title>Lover Birds</title>
+        <genre top="cali">Romance</genre>
+        <price>4.95</price>
+        <publish_date>2000-09-02</publish_date>
+        <description>When Carla meets Paul at an ornithology 
+        conference, tempers fly as feathers get ruffled.</description>
+     </book>
+     <book id="bk107">
+        <author>Thurman, Paula</author>
+        <title>Splish Splash</title>
+        <genre>Romance</genre>
+        <price>4.95</price>
+        <publish_date>2000-11-02</publish_date>
+        <description>A deep sea diver finds true love twenty 
+        thousand leagues beneath the sea.</description>
+     </book>
+     <book id="bk108">
+        <author>Knorr, Stefan</author>
+        <title>Creepy Crawlies</title>
+        <genre>Horror</genre>
+        <price>4.95</price>
+        <publish_date>2000-12-06</publish_date>
+        <description>An anthology of horror stories about roaches,
+        centipedes, scorpions  and other insects.</description>
+     </book>
+     <book id="bk109">
+        <author>Kress, Peter</author>
+        <title>Paradox Lost</title>
+        <genre>Science Fiction</genre>
+        <price>6.95</price>
+        <publish_date>2000-11-02</publish_date>
+        <description>After an inadvertant trip through a Heisenberg
+        Uncertainty Device, James Salway discovers the problems 
+        of being quantum.</description>
+     </book>
+     <book id="bk110">
+        <author>O'Brien, Tim</author>
+        <title>Microsoft .NET: The Programming Bible</title>
+        <genre top="cali">Computer</genre>
+        <price>36.95</price>
+        <publish_date>2000-12-09</publish_date>
+        <description>Microsoft's .NET initiative is explored in 
+        detail in this deep programmer's reference.</description>
+     </book>
+     <book id="bk111">
+        <author>O'Brien, Tim</author>
+        <title>MSXML3: A Comprehensive Guide</title>
+        <genre>Computer</genre>
+        <price>36.95</price>
+        <publish_date>2000-12-01</publish_date>
+        <description>The Microsoft MSXML3 parser is covered in 
+        detail, with attention to XML DOM interfaces, XSLT processing, 
+        SAX and more.</description>
+     </book>
+     <book id="bk112">
+        <author>Galos, Mike</author>
+        <title>Visual Studio 7: A Comprehensive Guide</title>
+        <genre>Computer</genre>
+        <price>49.95</price>
+        <publish_date cali="hola">2001-04-16</publish_date>
+        <description>Microsoft Visual Studio 7 is explored in depth,
+        looking at how Visual Basic, Visual C++, C#, and ASP+ are 
+        integrated into a comprehensive development 
+        environment.</description>
+     </book>
+  </catalog>`;
   
   private httpClient: HttpClient;
   constructor(http: HttpClient) {
@@ -59,12 +162,16 @@ export class AppComponent {
   Compilar() {
     this.consoleValue ="";
     var xmlObject = this.parserXml.parse(this.xmlText) as Objeto[];
+    console.log('parseando: ' + this.txtXpath);
     var xPathObject = this.parser.parse(this.txtXpath) as sentenciaXpath[];
     //console.log('xPathObject');
     //console.log(xPathObject);
     //Agregamos para cada sentencia su sentencia hija para simular lista doblemente enlazada (padre,hijo)
     var elementoActual:sentenciaXpath; 
     this.xmlOriginal = xmlObject;
+    var lista = [];
+    lista.push(xmlObject);
+    console.log(xmlObject);
     this.consoleValue = '';
     xPathObject.forEach(element => {
       elementoActual = element;
@@ -75,7 +182,9 @@ export class AppComponent {
       }
       this.listaDescendientes = [];
       console.log(elementoActual);
-      this.consoleValue += this.ProcesarNodoRaiz(elementoActual,xmlObject,null);
+     
+      
+      this.consoleValue += this.ProcesarNodoRaiz(elementoActual,lista,null);
     });
     //elementoActual en este momento es la raiz de la entrada Xpath
    
@@ -87,213 +196,314 @@ export class AppComponent {
     var result = "";
     switch(raiz.Tipo.Tipo){
       case TipoNodo.Raiz :
-        { 
+      {  
+        if(raiz.Hijo == null){
+          throw new Error("Error por manejar luego del nodo / debe de venir un el nombre de un elemento");
+        }
+        result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre) 
+      }break;
+      case TipoNodo.ID:
+      { 
+        this.retroceder = true;
+        console.log('Procesando ID: ' + raiz.Tipo.Valor);
+        if(raiz.Padre.Tipo.Tipo == TipoNodo.Descendiente){
+          this.listaDescendientes.push(raiz);
+        }
+        padre = xml;
+        xml = this.GetXmlEtiqueta(xml,raiz);
+        if(raiz.Hijo == null){
+          if(xml.length <= 0){
+            result += "No se encontraron elementos";
+          }else{
+            xml.forEach(element => {
+              result += this.GetXmlText(element);
+             });
+          }
+        }else{
+          result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre) 
+        }
+      } break;
+      case TipoNodo.Atributo:
+      {
+        console.log("atributo");
+        console.log(xml);
+        console.log(raiz);
+        if(raiz.Tipo.Valor == '*'){
+          xml = this.GetAllAtributos(xml);
+        }
+        console.log(xml);
+        this.retroceder = false;
+        if(raiz.Padre.Tipo.Tipo == TipoNodo.Descendiente && raiz.Tipo.Valor != '*'){
+          this.listaDescendientes.push(raiz);
+          xml = this.GetXmlEtiqueta(xml,raiz);
+          padre = xml;
+        }
+
+        if(xml.length <= 0){
+          result += "No se encontraron elementos";
+        }else{
+          if( raiz.Tipo.Valor != '*')
+            xml = this.GetXmlEtiqueta(xml,raiz);
           
-          if(raiz.Hijo != null)
-            return this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
-          else 
-            throw new Error("Error por manejar luego del nodo / debe de venir un el nombre de un elemento");
-        };break;
-        case TipoNodo.ID :
-        { 
-          console.log('precesando ID: ' + raiz.Tipo.Valor);
-          if(raiz.Hijo == null){
-            if(raiz.Padre.Tipo.Tipo == TipoNodo.Descendiente){
-              this.listaDescendientes.push(raiz);
-              
-              return this.BuscarValorDescendiente(xml,raiz.Tipo.Valor == '*');
-            }
-            else{
-              if(raiz.Parametro!= null){
-                result += this.ResolverPredicado(raiz,xml);
-              }else{
-                xml.forEach(element => {
-                  if(element.identificador == raiz.Tipo.Valor){
-                    
-                    result +=this.GetXmlText(element);
-                  }
-                });
+        }
+
+        if(raiz.Hijo == null){
+          if( raiz.Tipo.Valor != '*')
+          xml.forEach(element => {
+            element.listaAtributos.forEach(atr => {
+              if(atr.identificador == raiz.Tipo.Valor){
+                result += atr.identificador + ' = ' + atr.valor + '\n';
               }
-           }
-          }else{
-            if(raiz.Padre.Tipo.Tipo == TipoNodo.Descendiente){
-              this.listaDescendientes.push(raiz);
-              result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
-            }else{
-              xml.forEach(element => {
-                if(element.identificador == raiz.Tipo.Valor){
-                  if(element.listaObjetos!=null && element.listaObjetos!=undefined)
-                      xmlActual = element.listaObjetos;
-                  result += this.ProcesarNodoRaiz(raiz.Hijo,xmlActual,xml);
-                }
-              });
-            }
+            });
+          });
+          else
+            xml.forEach(element => {
+              result += this.GetXmlText(element);
+            });
             
-            
-          }
-        };break;
-        case TipoNodo.Atributo:{
-          if(raiz.Tipo.Valor == '*'){
-            result += this.GetAllAtributos(xml);
-          }else{
-            if(padre !=null){
-              console.log('atributo');
-              console.log(padre);
-              padre.forEach(element => {
-                element.listaAtributos.forEach(atr => {
-                if(atr.identificador == raiz.Tipo.Valor){
-                  result += atr.identificador + '='+ atr.valor + '\n';
-                }
-                });
-              });
-            }else{
-              if(raiz.Padre.Tipo.Tipo == TipoNodo.Descendiente){
-  
-                result += this.GetAtributosDescendencia(xml, raiz.Tipo.Valor);
-              }
-              
-            }
-          }
-         
-        }; break;
-        case TipoNodo.Descendiente:{
-          if(raiz.Hijo == null){
-            throw new Error("Error por manejar luego del nodo // debe de venir un el nombre de un elemento");
-          }else{
-            return this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
-          }
-        };break;
-        case TipoNodo.NodoPadre:{
-          var sentencia = raiz;
-          try{
-            var aux:sentenciaXpath;
-            sentencia.Padre.Padre.Hijo = raiz.Hijo;
-            aux = sentencia;
-            while(aux.Padre!=null){
-              aux = aux.Padre;
-            }
-            return this.ProcesarNodoRaiz(aux,this.xmlOriginal,null);
-          }catch {
-              return 'xPath invalido ? X_X';
-          }
-         
-         
-        };break;
-        case TipoNodo.Asterisco :
-        { 
+        }else{
+          //falta validar comportamiento
+          result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
+        }
+      } break;
+      case TipoNodo.Descendiente:
+      { 
+        if(raiz.Hijo == null){
+          throw new Error("Error por manejar luego del nodo // debe de venir un el nombre de un elemento");
+        }
+        result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
+      }break;
+      case TipoNodo.NodoPadre:
+      {
+        console.log(this.retroceder);
+        if(this.retroceder){
+          var xmlTemp = [];
+          xml.forEach(element => {
+          var existe = false;
+          xmlTemp.forEach(item => {
+              if(item == element.padre)
+              existe = true;
+          });
+          if(!existe)
+            xmlTemp.push(element.padre);
+          });
+          xml = xmlTemp;
+        }
+        this.retroceder = true;
+        if(raiz.Hijo == null){
           xml.forEach(element => {
             result += this.GetXmlText(element);
           });
-        };break;
-        case TipoNodo.Axis :
-          {
-            console.log('Procesando axis');
-            console.log(xml);
-            console.log(padre);
-            switch(raiz.Tipo.Valor){
-              case 'ancestor':{
-                //result += this.BuscarAncestros(xml,);
-              }break;
-              case 'ancestor-or-self':{
-                
-              }break;
-              case 'attribute':{
-                if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
-                  padre.forEach(element => {
-                    element.listaAtributos.forEach(atr => {
-                      if(atr.identificador == raiz.Tipo.AxisNodo.Valor){
-                        result += atr.identificador + ' = ' + atr.valor + '\n';
-                      }
-                    });
-                  });
-                }
-                
-              }break;
-              case 'child':{
-                if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
-                  xml.forEach(element => {
-                    if(element.identificador == raiz.Tipo.AxisNodo.Valor){
-                      result += this.GetXmlText(element);
-                    }
-                  });
-                }
-              }break;
-              case 'descendant':{
-                if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
-                  result += this.GetDescendientesXml(xml,raiz.Tipo.AxisNodo.Valor);
-                }
-              }break;
-              case 'descendant-or-self':{
-                // para este hay que agrgar el padre de cada nodo objeto
-                if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
-                  result += this.GetDescendientesXml(padre,raiz.Tipo.AxisNodo.Valor);
-                }
-              }break;
-              case 'following':{
-                
-              }break;
-              case 'following-sibling':{
-                
-              }break;
-              case 'namespace':{
-                
-              }break;
-              case 'parent':{
-                
-              }break;
-              case 'preceding':{
-                
-              }break;
-              case 'preceding-sibling':{
-                
-              }break;
-              case 'self':{
-                if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
-                  xml.forEach(element => {
-                    result += this.GetXmlText(element);
-                  });
-                }
-              }break;
+        }else{
+          //falta validar comportamiento
+          result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
+        }
+       
+      }break;
+      case TipoNodo.Asterisco :
+      { 
+        padre = xml;
+        xml = [];
+        padre.forEach(element => {
+          xml = xml.concat(element.listaObjetos);
+        });
+        if(raiz.Hijo ==null){
+          xml.forEach(element => {
+            result += this.GetXmlText(element);
+          });
+        }else{
+          result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
+        }
+      }break;
+      case TipoNodo.AutoReferencia :
+        { 
+          if(raiz.Hijo ==null){
+            xml.forEach(element => {
+              result += this.GetXmlText(element);
+            });
+          }else{
+            result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
+          }
+          
+        }break;
+      case TipoNodo.Axis :
+      {
+        switch(raiz.Tipo.Valor){
+          case 'ancestor':{
+            //result += this.BuscarAncestros(xml,);
+          }break;
+          case 'ancestor-or-self':{
+            
+          }break;
+          case 'attribute':{
+            if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
+              padre.forEach(element => {
+                element.listaAtributos.forEach(atr => {
+                  if(atr.identificador == raiz.Tipo.AxisNodo.Valor){
+                    result += atr.identificador + ' = ' + atr.valor + '\n';
+                  }
+                });
+              });
             }
-          };break;
-      }
+            
+          }break;
+          case 'child':{
+            if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
+              xml.forEach(element => {
+                if(element.identificador == raiz.Tipo.AxisNodo.Valor){
+                  result += this.GetXmlText(element);
+                }
+              });
+            }
+          }break;
+          case 'descendant':{
+            if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
+              padre = xml;
+              xml = this.GetDescendientesXml(xml,raiz.Tipo.AxisNodo.Valor)
+            }
+          }break;
+          case 'descendant-or-self':{
+            if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
+              padre = xml;
+              xml = this.GetDescendientesXml(xml,raiz.Tipo.AxisNodo.Valor)
+            }
+          }break;
+          case 'following':{
+            
+          }break;
+          case 'following-sibling':{
+            
+          }break;
+          case 'namespace':{
+            
+          }break;
+          case 'parent':{
+            
+          }break;
+          case 'preceding':{
+            
+          }break;
+          case 'preceding-sibling':{
+            
+          }break;
+          case 'self':{
+            if(raiz.Tipo.AxisNodo.Tipo == TipoNodo.ID){
+              xml.forEach(element => {
+                result += this.GetXmlText(element);
+              });
+            }
+          }break;
+        }
+        if(raiz.Hijo ==null){
+          xml.forEach(element => {
+            result += this.GetXmlText(element);
+          });
+        }else{
+          result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
+        }
+      }break;
+      case TipoNodo.Funcion_Text :
+      {
+        if(raiz.Hijo == null){
+          console.log('text');
+          console.log(xml);
+          result += this.GetText(xml);
+        }
+      }break;
+      case TipoNodo.Funcion_Node :
+      {
+        console.log('node');
+        console.log(xml);
+        xml = this.GetNodes(xml);
+        console.log(xml);
+        if(raiz.Hijo ==null){
+          xml.forEach(element => {
+            result += this.GetXmlText(element);
+          });
+        }else{
+          result += this.ProcesarNodoRaiz(raiz.Hijo,xml,padre);
+        }
+      }break;
+    }
 
 
     return result;
   }
+  GetNodes(xml:Objeto[]):Objeto[]{
+    var result:Objeto[] = [];
+    xml.forEach(element => {
+      result = result.concat(element.listaObjetos);
+      result = this.GetNodes(element.listaObjetos);
+    });
+    return result;
+  }
+  GetText(xml:Objeto[]):string{
+    var result = '';
+    xml.forEach(element => {
+      result += element.texto + '\n';
+      result += this.GetText(element.listaObjetos);
+    });
+    return result;
+  }
+  GetXmlEtiqueta(xml:Objeto[],etiqueta:sentenciaXpath):Objeto[]
+  { 
+    var result:Objeto[] = [];
+    if(this.listaDescendientes.length > 0){
+      result = this.BuscarValorDescendiente(xml);
+      this.listaDescendientes = [];
+    }else{
+      if(etiqueta.Tipo.Tipo == TipoNodo.Atributo){
+        xml.forEach(element => {
+          element.listaAtributos.forEach(atr => {
+            if(atr.identificador == etiqueta.Tipo.Valor){
+              result.push(element);
+            }
+          });
+        });
+      }else{
+        xml.forEach(element => {
+          element.listaObjetos.forEach(obj => {
+            if(obj.identificador == etiqueta.Tipo.Valor){
+              result.push(obj);
+            }
+          });
+        });
+      }
+     
+    }
+    if(etiqueta.Parametro!=null){
+      console.log('item con operacion');
+      console.log(etiqueta);
+      console.log(result);
+      result = this.FiltrarOperacion(result,etiqueta);
+      console.log(result);
+    }
+    return result;
+  }
 
-  GetDescendientesXml(xml:Objeto[],etiqueta:string):string{
-    var result = "";
+  GetDescendientesXml(xml:Objeto[],etiqueta:string):Objeto[]{
+    var result:Objeto[]=[];
     xml.forEach(element => {
       if(element.identificador == etiqueta){
-        result+= this.GetXmlText(element);
+        result.push(element);
       }
-      result+= this.GetDescendientesXml(element.listaObjetos,etiqueta);
+      result = result.concat(this.GetDescendientesXml(element.listaObjetos,etiqueta));
     });
     return result;
   }
-  GetAllAtributos(xml:Objeto[]):string{
-    var result = "";
-    if(this.listaDescendientes.length > 0){
-      result += this.BuscarValorDescendiente(xml,true);
-    }else{
-      
-      result += this.GetAtributesXml(xml);
-    }
-    
-    return result;
-  }
-  GetAtributesXml(xml:Objeto[]):string{
-    var result = "";
+  GetAllAtributos(xml:Objeto[]):Objeto[]{
+    var result:Objeto[] = [];
     xml.forEach(element => {
-      element.listaAtributos.forEach(atr => {
-        result += atr.identificador + ' = ' + atr.valor + '\n';
-      });
-      result += this.GetAllAtributos(element.listaObjetos);
+      if(element.listaAtributos.length>0 && element.identificador != 'Encabezado'){
+        result.push(element);
+      }
+      result = result.concat( this.GetAllAtributos(element.listaObjetos));
     });
+
     return result;
   }
-  ResolverOperacion(operacion: parametroXpath):any[]{
+  
+  ResolverOperacion(operacion: parametroXpath,xml:Objeto[]):any[]{
     switch (operacion.Operacion.TipoOperador){
       case TipoOperador.Mas: {
         var izquierdo :number;
@@ -304,9 +514,14 @@ export class AppComponent {
             && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
               throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '+' + operacion.Operacion.ParametroDerecho.Valor);
           }
-          izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+            izquierdo = xml.length;
+          }else{
+            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          }
+          
         }else{
-          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
         }
         if(operacion.Operacion.ParametroDerecho.Operacion == null){
           if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
@@ -314,9 +529,13 @@ export class AppComponent {
             && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
               throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '+' + operacion.Operacion.ParametroDerecho.Valor);
           }
-          derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+            derecho = xml.length;
+          }else{
+            derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          }
         }else{
-          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
         }
         var ret = [];
         ret.push(izquierdo + derecho);
@@ -331,9 +550,14 @@ export class AppComponent {
             && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
               throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '+' + operacion.Operacion.ParametroDerecho.Valor);
           }
-          izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+            izquierdo = xml.length;
+          }else{
+            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          }
+         
         }else{
-          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
         }
         if(operacion.Operacion.ParametroDerecho.Operacion == null){
           if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
@@ -341,10 +565,16 @@ export class AppComponent {
             && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
               throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '+' + operacion.Operacion.ParametroDerecho.Valor);
           }
-          derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+            derecho = xml.length;
+          }else{
+            derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          }
+         
         }else{
-          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
         }
+        
         var ret = [];
         ret.push(izquierdo - derecho);
         return ret;
@@ -359,9 +589,13 @@ export class AppComponent {
             && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
               throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '+' + operacion.Operacion.ParametroDerecho.Valor);
           }
-          izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+            izquierdo = xml.length;
+          }else{
+            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          }
         }else{
-          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
         }
         if(operacion.Operacion.ParametroDerecho.Operacion == null){
           if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
@@ -369,9 +603,13 @@ export class AppComponent {
             && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
               throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '+' + operacion.Operacion.ParametroDerecho.Valor);
           }
-          derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+            derecho = xml.length;
+          }else{
+            derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          }
         }else{
-          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
         }
         var ret = [];
         ret.push(izquierdo * derecho);
@@ -386,9 +624,13 @@ export class AppComponent {
             && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
               throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '+' + operacion.Operacion.ParametroDerecho.Valor);
           }
-          izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+            izquierdo = xml.length;
+          }else{
+            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          }
         }else{
-          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
         }
         if(operacion.Operacion.ParametroDerecho.Operacion == null){
           if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
@@ -396,197 +638,509 @@ export class AppComponent {
             && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
               throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '+' + operacion.Operacion.ParametroDerecho.Valor);
           }
-          derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+            derecho = xml.length;
+          }else{
+            derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          }
         }else{
-          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
         }
         var ret = [];
         ret.push(izquierdo / derecho);
         return ret;
       } break;
-
+      case TipoOperador.Mod: {
+        var izquierdo :number;
+        var derecho :number;
+        if(operacion.Operacion.ParametroIzquierdo.Operacion == null){
+          if(operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+            && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Entero
+            && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
+              throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + 'mod' + operacion.Operacion.ParametroDerecho.Valor);
+          }
+          if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+            izquierdo = xml.length;
+          }else{
+            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+          }
+        }else{
+          izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
+        }
+        if(operacion.Operacion.ParametroDerecho.Operacion == null){
+          if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
+            && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Entero
+            && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
+              throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + 'mod' + operacion.Operacion.ParametroDerecho.Valor);
+          }
+          if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+            derecho = xml.length;
+          }else{
+            derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+          }
+        }else{
+          derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
+        }
+        var ret = [];
+        ret.push(izquierdo % derecho);
+        return ret;
+      } break;
       case TipoOperador.Mayor: {
+        console.log(operacion);
         if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Atributo
           && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Punto
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
           &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Atributo
-          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto){
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Position
+            &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Nodo
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Nodo
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Position
+          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto
+          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena){
             throw new Error('Error expresion invalida con operador \'>\'');
         }
         if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Atributo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Nodo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Position
           || operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Punto){
            
             if(operacion.Operacion.ParametroDerecho.Operacion == null){
               if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
+                && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
                 && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Entero
                 && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
                   throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '>' + operacion.Operacion.ParametroDerecho.Valor);
               }
-              derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){
+                var ret = [];
+                ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+                ret.push(operacion.Operacion.ParametroDerecho.Valor);
+                ret.push(">");
+                ret.push( 0);
+                ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
+               return ret;
+              }
+              else{
+                if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+                  derecho = xml.length;
+                }else{
+                  derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+                }
+              }
+              
             }else{
-              derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){//verficar si entra aca en algun momento
+                var ret = [];
+                ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+                ret.push(operacion.Operacion.ParametroDerecho.Valor);
+                ret.push(">");
+                ret.push( 0);
+                ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
+               return ret;
+              }else{
+                //de momento solo se resulven operaciones aritmeticas
+                if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Entero)
+                {
+                  derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+                }else{
+                  derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
+                }
+                
+              }
+              
             }
             var ret = [];
             ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
             ret.push(derecho);
             ret.push(">");
-            ret.push(0);
+            ret.push( 0);
+            ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
            return ret;
         }else{
 
           if(operacion.Operacion.ParametroIzquierdo.Operacion == null){
-            if(operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+            if( operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+              && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena
               && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Entero
               && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
                 throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '>' + operacion.Operacion.ParametroDerecho.Valor);
             }
-            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+            if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Cadena){
+              var ret = [];
+              ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+              ret.push(operacion.Operacion.ParametroDerecho.Valor);
+              ret.push(">");
+              ret.push( 1);
+              ret.push(operacion.Operacion.ParametroDerecho.Tipo);
+             return ret;
+            }else{
+              if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+                izquierdo = xml.length;
+              }else{
+                izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+              }
+              
+            }
+            
+            
           }else{
-            izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+            if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Cadena){
+              var ret = [];
+              ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+              ret.push(operacion.Operacion.ParametroDerecho.Valor);
+              ret.push(">");
+              ret.push( 1);
+              ret.push(operacion.Operacion.ParametroDerecho.Tipo);
+             return ret;
+            }else{
+              izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
+            }
           }
           var ret = [];
           ret.push(izquierdo);
           ret.push(operacion.Operacion.ParametroDerecho.Valor);
           ret.push(">");
           ret.push(1);
+          ret.push(operacion.Operacion.ParametroDerecho.Tipo);
          return ret;
         }
-
       } break;
       case TipoOperador.Menor: {
         if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Atributo
           && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Punto
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
           &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Atributo
-          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto){
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Nodo
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Nodo
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Position
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Position
+          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto
+          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena){
             throw new Error('Error expresion invalida con operador \'<\'');
         }
         if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Atributo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Nodo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Position
           || operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Punto){
            
             if(operacion.Operacion.ParametroDerecho.Operacion == null){
               if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
+                && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
                 && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Entero
                 && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
                   throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '<' + operacion.Operacion.ParametroDerecho.Valor);
               }
-              derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){
+                var ret = [];
+                ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+                ret.push(operacion.Operacion.ParametroDerecho.Valor);
+                ret.push("<");
+                ret.push( 0);
+                ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
+               return ret;
+              }
+              else{
+                if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+                  derecho = xml.length;
+                }else{
+                  derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+                }
+              }
+              
             }else{
-              derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){//verficar si entra aca en algun momento
+                var ret = [];
+                ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+                ret.push(operacion.Operacion.ParametroDerecho.Valor);
+                ret.push("<");
+                ret.push( 0);
+                ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
+               return ret;
+              }else{
+                //de momento solo se resulven operaciones aritmeticas
+                derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
+              }
+              
             }
             var ret = [];
             ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
             ret.push(derecho);
             ret.push("<");
-            ret.push(0);
+            ret.push( 0);
+            ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
            return ret;
         }else{
 
           if(operacion.Operacion.ParametroIzquierdo.Operacion == null){
-            if(operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+            if( operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+              && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena
               && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Entero
               && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
                 throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '<' + operacion.Operacion.ParametroDerecho.Valor);
             }
-            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+            if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Cadena){
+              var ret = [];
+              ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+              ret.push(operacion.Operacion.ParametroDerecho.Valor);
+              ret.push("<");
+              ret.push( 1);
+              ret.push(operacion.Operacion.ParametroDerecho.Tipo);
+             return ret;
+            }else{
+              if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+                izquierdo = xml.length;
+              }else{
+                izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+              }
+              
+            }
+            
+            
           }else{
-            izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+            if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Cadena){
+              var ret = [];
+              ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+              ret.push(operacion.Operacion.ParametroDerecho.Valor);
+              ret.push("<");
+              ret.push( 1);
+              ret.push(operacion.Operacion.ParametroDerecho.Tipo);
+             return ret;
+            }else{
+              izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
+            }
           }
           var ret = [];
           ret.push(izquierdo);
           ret.push(operacion.Operacion.ParametroDerecho.Valor);
           ret.push("<");
           ret.push(1);
+          ret.push(operacion.Operacion.ParametroDerecho.Tipo);
          return ret;
         }
       } break;
       case TipoOperador.MenorIgual: {
         if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Atributo
           && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Punto
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
           &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Atributo
-          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto){
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Nodo
+        && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Nodo
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Position
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Position
+          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto
+          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena){
             throw new Error('Error expresion invalida con operador \'<=\'');
         }
         if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Atributo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Nodo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Position
           || operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Punto){
            
             if(operacion.Operacion.ParametroDerecho.Operacion == null){
               if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
+                && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
                 && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Entero
                 && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
                   throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '<=' + operacion.Operacion.ParametroDerecho.Valor);
               }
-              derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){
+                var ret = [];
+                ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+                ret.push(operacion.Operacion.ParametroDerecho.Valor);
+                ret.push("<=");
+                ret.push( 0);
+                ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
+               return ret;
+              }
+              else{
+                if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+                  derecho = xml.length;
+                }else{
+                  derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+                }
+              }
+              
             }else{
-              derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){//verficar si entra aca en algun momento
+                var ret = [];
+                ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+                ret.push(operacion.Operacion.ParametroDerecho.Valor);
+                ret.push("<=");
+                ret.push( 0);
+                ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
+               return ret;
+              }else{
+                //de momento solo se resulven operaciones aritmeticas
+                derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
+              }
+              
             }
             var ret = [];
             ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
             ret.push(derecho);
             ret.push("<=");
-            ret.push(0);
+            ret.push( 0);
+            ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
            return ret;
         }else{
 
           if(operacion.Operacion.ParametroIzquierdo.Operacion == null){
-            if(operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+            if( operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+              && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena
               && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Entero
               && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
                 throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '<=' + operacion.Operacion.ParametroDerecho.Valor);
             }
-            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+            if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Cadena){
+              var ret = [];
+              ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+              ret.push(operacion.Operacion.ParametroDerecho.Valor);
+              ret.push("<=");
+              ret.push( 1);
+              ret.push(operacion.Operacion.ParametroDerecho.Tipo);
+             return ret;
+            }else{
+              if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+                izquierdo = xml.length;
+              }else{
+                izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+              }
+              
+            }
+            
+            
           }else{
-            izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+            if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Cadena){
+              var ret = [];
+              ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+              ret.push(operacion.Operacion.ParametroDerecho.Valor);
+              ret.push("<=");
+              ret.push( 1);
+              ret.push(operacion.Operacion.ParametroDerecho.Tipo);
+             return ret;
+            }else{
+              izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
+            }
           }
           var ret = [];
           ret.push(izquierdo);
           ret.push(operacion.Operacion.ParametroDerecho.Valor);
           ret.push("<=");
           ret.push(1);
+          ret.push(operacion.Operacion.ParametroDerecho.Tipo);
          return ret;
         }
       } break;
       case TipoOperador.MayorIgual: {
         if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Atributo
           && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Punto
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
           &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Atributo
-          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto){
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Nodo
+        && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Nodo
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Position
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Position
+          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto
+          && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena){
             throw new Error('Error expresion invalida con operador \'>=\'');
         }
         if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Atributo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Nodo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Position
           || operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Punto){
            
             if(operacion.Operacion.ParametroDerecho.Operacion == null){
               if(operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Decimal
+                && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
                 && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Entero
                 && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Last){
                   throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '>=' + operacion.Operacion.ParametroDerecho.Valor);
               }
-              derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){
+                var ret = [];
+                ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+                ret.push(operacion.Operacion.ParametroDerecho.Valor);
+                ret.push(">=");
+                ret.push( 0);
+                ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
+               return ret;
+              }
+              else{
+                if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+                  derecho = xml.length;
+                }else{
+                  derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+                }
+              }
+              
             }else{
-              derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){//verficar si entra aca en algun momento
+                var ret = [];
+                ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+                ret.push(operacion.Operacion.ParametroDerecho.Valor);
+                ret.push(">=");
+                ret.push( 0);
+                ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
+               return ret;
+              }else{
+                //de momento solo se resulven operaciones aritmeticas
+                derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
+              }
+              
             }
             var ret = [];
             ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
             ret.push(derecho);
             ret.push(">=");
-            ret.push(0);
+            ret.push( 0);
+            ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
            return ret;
         }else{
 
           if(operacion.Operacion.ParametroIzquierdo.Operacion == null){
-            if(operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+            if( operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Decimal
+              && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena
               && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Entero
               && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Last){
                 throw new Error('Error expresion invalida.' + operacion.Operacion.ParametroIzquierdo.Valor + '>=' + operacion.Operacion.ParametroDerecho.Valor);
             }
-            izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+            if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Cadena){
+              var ret = [];
+              ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+              ret.push(operacion.Operacion.ParametroDerecho.Valor);
+              ret.push(">=");
+              ret.push( 1);
+              ret.push(operacion.Operacion.ParametroDerecho.Tipo);
+             return ret;
+            }else{
+              if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+                izquierdo = xml.length;
+              }else{
+                izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+              }
+              
+            }
+            
+            
           }else{
-            izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+            if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Cadena){
+              var ret = [];
+              ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
+              ret.push(operacion.Operacion.ParametroDerecho.Valor);
+              ret.push(">=");
+              ret.push( 1);
+              ret.push(operacion.Operacion.ParametroDerecho.Tipo);
+             return ret;
+            }else{
+              izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
+            }
           }
           var ret = [];
           ret.push(izquierdo);
           ret.push(operacion.Operacion.ParametroDerecho.Valor);
           ret.push(">=");
           ret.push(1);
+          ret.push(operacion.Operacion.ParametroDerecho.Tipo);
          return ret;
         }
       } break;
@@ -595,12 +1149,17 @@ export class AppComponent {
           && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Punto
           && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
           &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Atributo
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Nodo
+        && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Nodo
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Position
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Position
           && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto
           && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena){
             throw new Error('Error expresion invalida con operador \'=\'');
         }
         if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Atributo
           ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Nodo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Position
           || operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Punto){
            
             if(operacion.Operacion.ParametroDerecho.Operacion == null){
@@ -618,12 +1177,17 @@ export class AppComponent {
                 ret.push( 0);
                 ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
                return ret;
-              }else{
-                derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+              }
+              else{
+                if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+                  derecho = xml.length;
+                }else{
+                  derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+                }
               }
               
             }else{
-              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){//verficar si entra aca en algun momento
                 var ret = [];
                 ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
                 ret.push(operacion.Operacion.ParametroDerecho.Valor);
@@ -632,7 +1196,8 @@ export class AppComponent {
                 ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
                return ret;
               }else{
-                derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+                //de momento solo se resulven operaciones aritmeticas
+                derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
               }
               
             }
@@ -661,7 +1226,12 @@ export class AppComponent {
               ret.push(operacion.Operacion.ParametroDerecho.Tipo);
              return ret;
             }else{
-              izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+              if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+                izquierdo = xml.length;
+              }else{
+                izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+              }
+              
             }
             
             
@@ -675,7 +1245,7 @@ export class AppComponent {
               ret.push(operacion.Operacion.ParametroDerecho.Tipo);
              return ret;
             }else{
-              izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+              izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
             }
           }
           var ret = [];
@@ -692,12 +1262,17 @@ export class AppComponent {
           && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Punto
           && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Cadena
           &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Atributo
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Nodo
+        && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Nodo
+          && operacion.Operacion.ParametroDerecho.Tipo != TipoParametro.Funtion_Position
+          &&operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Funtion_Position
           && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Punto
           && operacion.Operacion.ParametroIzquierdo.Tipo != TipoParametro.Cadena){
             throw new Error('Error expresion invalida con operador \'!=\'');
         }
         if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Atributo
           ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Nodo
+          ||operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Position
           || operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Punto){
            
             if(operacion.Operacion.ParametroDerecho.Operacion == null){
@@ -715,12 +1290,17 @@ export class AppComponent {
                 ret.push( 0);
                 ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
                return ret;
-              }else{
-                derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+              }
+              else{
+                if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Funtion_Last){
+                  derecho = xml.length;
+                }else{
+                  derecho = Number(operacion.Operacion.ParametroDerecho.Valor);
+                }
               }
               
             }else{
-              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){
+              if(operacion.Operacion.ParametroDerecho.Tipo == TipoParametro.Cadena){//verficar si entra aca en algun momento
                 var ret = [];
                 ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
                 ret.push(operacion.Operacion.ParametroDerecho.Valor);
@@ -729,7 +1309,8 @@ export class AppComponent {
                 ret.push(operacion.Operacion.ParametroIzquierdo.Tipo);
                return ret;
               }else{
-                derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho)[0];
+                //de momento solo se resulven operaciones aritmeticas
+                derecho = this.ResolverOperacion(operacion.Operacion.ParametroDerecho,xml)[0];
               }
               
             }
@@ -753,12 +1334,17 @@ export class AppComponent {
               var ret = [];
               ret.push(operacion.Operacion.ParametroIzquierdo.Valor);
               ret.push(operacion.Operacion.ParametroDerecho.Valor);
-              ret.push("=");
+              ret.push("!=");
               ret.push( 1);
               ret.push(operacion.Operacion.ParametroDerecho.Tipo);
              return ret;
             }else{
-              izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+              if(operacion.Operacion.ParametroIzquierdo.Tipo == TipoParametro.Funtion_Last){
+                izquierdo = xml.length;
+              }else{
+                izquierdo = Number(operacion.Operacion.ParametroIzquierdo.Valor);
+              }
+              
             }
             
             
@@ -772,7 +1358,7 @@ export class AppComponent {
               ret.push(operacion.Operacion.ParametroDerecho.Tipo);
              return ret;
             }else{
-              izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo)[0];
+              izquierdo = this.ResolverOperacion(operacion.Operacion.ParametroIzquierdo,xml)[0];
             }
           }
           var ret = [];
@@ -784,272 +1370,12 @@ export class AppComponent {
          return ret;
         }
       } break;
-
       case TipoOperador.And: {} break;
       case TipoOperador.Or: {} break;
     }
   }
 
-  ResolverPredicado(raiz:sentenciaXpath, xml:Objeto[]):string{
-    var result:string = "";
-    var param = Object.getPrototypeOf(raiz.Parametro);
-    var obj:any = raiz.Parametro;
-    console.log(param);
-    if( param.constructor.name === "ParametroOperacionXpath"){
-      console.log('es ParametroOperacionXpath');
-      var parametro = obj as ParametroOperacionXpath;
-      switch(parametro.Tipo){
-        case TipoParametro.Entero:{
-          var meta = Number(parametro.Valor);
-          var elements = [];
-          xml.forEach(element => {
-            if(element.identificador == raiz.Tipo.Valor){
-              
-              elements.push(element);
-            }
-          });
-          if(elements.length>= meta){
-            result +=this.GetXmlText(elements[meta-1]);
-          }else{
-            result = 'no existe elemento en la posicion: ' + meta;
-          }
-        }break; 
-      }
-    }else if(param.constructor.name === "parametroXpath"){
-      var operacion = obj as parametroXpath;
-      console.log('es operacion');
-      var valor = this.ResolverOperacion(operacion);
-      console.log('valor');
-      console.log(valor);
-      if(valor.length <= 1){
-        var elements = [];
-        xml.forEach(element => {
-          if(element.identificador == raiz.Tipo.Valor){
-            
-            elements.push(element);
-          }
-        });
-        if(elements.length>= valor[0]){
-          result +=this.GetXmlText(elements[valor[0] - 1]);
-        }else{
-          result = 'no existe elemento en la posicion: ' + valor;
-        }
-      }else{
-        console.log('operacion logica');
-        switch(valor[2]){
-          case "=":{
-            xml.forEach(element => {
-              if(element.identificador == raiz.Tipo.Valor){
-                console.log(raiz);
-                if(valor[4] == TipoParametro.Atributo){
-                  element.listaAtributos.forEach(atr => {
-                    if(atr.identificador == valor[valor[3]])
-                      {
-                        console.log('TipoParametro.Atributo');
-                        console.log(atr.valor);
-                        console.log( valor[1]);
-                        let re = /\"/gi;
-                        if(valor[3] == 0 ){
-                          if(atr.valor.replace(re,'') == valor[1].toString())
-                          {
-                            result +=this.GetXmlText(element);
-                          }
-                        }else{
-                          if(atr.valor.replace(re,'') == valor[0].toString())
-                          {
-                            result +=this.GetXmlText(element);
-                          }
-                        }
-                        
-                      }
-                  });
-                }else if(valor[4] == TipoParametro.Nodo){
-                  let re = /\"/gi;
-                  let re2 = /\\/gi;
-                  console.log('element.texto');
-                  console.log(element);
-                  console.log('valor[valor[3]]');
-                  console.log(valor[valor[3]]);
-
-                  element.listaObjetos.forEach(nodo => {
-                    if(valor[3] == 0 ){
-                      if(nodo.identificador ==  valor[0]){
-                        if(nodo.texto.replace(re,'').replace(re2,'') == valor[1].toString().replace(re,'').replace(re2,''))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }
-                    }else{
-                      if(nodo.identificador ==  valor[1]){
-                        if(nodo.texto.replace(re,'').replace(re2,'') == valor[0].toString().replace(re,'').replace(re2,''))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }
-                    }
-                  });
-                  
-                }
-                
-              }
-            });
-          }break;
-          case ">":{
-            xml.forEach(element => {
-              if(element.identificador == raiz.Tipo.Valor){
-                element.listaAtributos.forEach(atr => {
-                  if(atr.identificador == valor[valor[3]])
-                    {let re = /\"/gi;
-                      if(valor[3] == 0 ){
-                        if(Number(atr.valor.replace(re,'')) > Number(valor[1]))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }else{
-                        if(Number(atr.valor.replace(re,'')) > Number(valor[0]))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }
-                      
-                    }
-                });
-              }
-            });
-          }break;
-          case "<":{
-            xml.forEach(element => {
-              if(element.identificador == raiz.Tipo.Valor){
-                element.listaAtributos.forEach(atr => {
-                  if(atr.identificador == valor[valor[3]])
-                    {let re = /\"/gi;
-                      if(valor[3] == 0 ){
-                        if(Number(atr.valor.replace(re,'')) < Number(valor[1]))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }else{
-                        if(Number(atr.valor.replace(re,'')) < Number(valor[0]))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }
-                      
-                    }
-                });
-              }
-            });
-          }break;
-          case ">=":{
-            xml.forEach(element => {
-              if(element.identificador == raiz.Tipo.Valor){
-                element.listaAtributos.forEach(atr => {
-                  if(atr.identificador == valor[valor[3]])
-                    {let re = /\"/gi;
-                      if(valor[3] == 0 ){
-                        if(Number(atr.valor.replace(re,'')) >= Number(valor[1]))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }else{
-                        if(Number(atr.valor.replace(re,'')) >= Number(valor[0]))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }
-                      
-                    }
-                });
-              }
-            });
-          }break;
-          case "<=":{
-            xml.forEach(element => {
-              if(element.identificador == raiz.Tipo.Valor){
-                element.listaAtributos.forEach(atr => {
-                  if(atr.identificador == valor[valor[3]])
-                    {let re = /\"/gi;
-                      if(valor[3] == 0 ){
-                        if(Number(atr.valor.replace(re,'')) <= Number(valor[1]))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }else{
-                        if(Number(atr.valor.replace(re,'')) <= Number(valor[0]))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }
-                      
-                    }
-                });
-              }
-            });
-          }break;
-          case "!=":{
-            xml.forEach(element => {
-              if(element.identificador == raiz.Tipo.Valor){
-                console.log(raiz);
-                if(valor[4] == TipoParametro.Atributo){
-                  element.listaAtributos.forEach(atr => {
-                    if(atr.identificador == valor[valor[3]])
-                      {
-                        console.log('TipoParametro.Atributo');
-                        console.log(atr.valor);
-                        console.log( valor[1]);
-                        let re = /\"/gi;
-                        if(valor[3] == 0 ){
-                          if(atr.valor.replace(re,'') != valor[1].toString())
-                          {
-                            result +=this.GetXmlText(element);
-                          }
-                        }else{
-                          if(atr.valor.replace(re,'') != valor[0].toString())
-                          {
-                            result +=this.GetXmlText(element);
-                          }
-                        }
-                        
-                      }
-                  });
-                }else if(valor[4] == TipoParametro.Nodo){
-                  let re = /\"/gi;
-                  let re2 = /\\/gi;
-                  console.log('element.texto');
-                  console.log(element);
-                  console.log('valor[valor[3]]');
-                  console.log(valor[valor[3]]);
-
-                  element.listaObjetos.forEach(nodo => {
-                    if(valor[3] == 0 ){
-                      if(nodo.identificador ==  valor[0]){
-                        if(nodo.texto.replace(re,'').replace(re2,'') != valor[1].toString().replace(re,'').replace(re2,''))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }
-                    }else{
-                      if(nodo.identificador ==  valor[1]){
-                        if(nodo.texto.replace(re,'').replace(re2,'') != valor[0].toString().replace(re,'').replace(re2,''))
-                        {
-                          result +=this.GetXmlText(element);
-                        }
-                      }
-                    }
-                  });
-                  
-                }
-                
-              }
-            });
-          }break;
-        }
-      }
-      
-
-    }
-    return result;
-  }
+  
   GetAtributosDescendencia(xml:Objeto[],etiqueta:string):string{
     var ret = "" ;
       xml.forEach(element => {
@@ -1063,66 +1389,414 @@ export class AppComponent {
     return ret;
   }
 
-  BuscarValorDescendiente(xml:Objeto[],onlyParamas:boolean):string{
-    var result = "";
+  BuscarValorDescendiente(xml:Objeto[]):Objeto[]{
+    //var result = "";
     var temp = xml;
     this.listaDescendientes.forEach(item => {
       var aux:Objeto[] = [];
       if(temp!=undefined)
+      {
         temp.forEach(element => {
-          if(element.identificador == item.Tipo.Valor){
-            aux.push(element);
-          }else{
+          if(item.Tipo.Tipo == TipoNodo.Atributo){
+            element.listaAtributos.forEach(atr => {
+              if(atr.identificador == item.Tipo.Valor){
+                aux.push(element);
+              }
+            });
             aux = aux.concat(this.BuscarEtiqueta(element.listaObjetos,item));
+          }else{
+            if(element.identificador == item.Tipo.Valor){
+              aux.push(element);
+            }else{
+              aux = aux.concat(this.BuscarEtiqueta(element.listaObjetos,item));
+            }
           }
         });
-
+      }
       temp = aux;
+      if(item.Parametro!=null){
+        console.log('item con operacion');
+        console.log(temp);
+        temp = this.FiltrarOperacion(temp,item);
+        console.log(temp);
+      }
     });
 
-    result = this.BuscarValorEtiqueta(temp,this.listaDescendientes[this.listaDescendientes.length -1],onlyParamas);
+    //result = this.BuscarValorEtiqueta(temp,this.listaDescendientes[this.listaDescendientes.length -1],onlyParamas);
 
-   
-    return result;
+  
+    return temp;
   }
 
   BuscarEtiqueta(xml:Objeto[],etiqueta:sentenciaXpath):Objeto[]{
     var ret:Objeto[]=[];
     xml.forEach(element => {
-      if(element.identificador == etiqueta.Tipo.Valor){
-        ret.push(element);
-      }else{
+      if(etiqueta.Tipo.Tipo == TipoNodo.Atributo){
+        element.listaAtributos.forEach(atr => {
+          if(atr.identificador == etiqueta.Tipo.Valor){
+            ret.push(element);
+          }
+        });
         if(element.listaObjetos.length > 0)
-        ret = ret.concat( this.BuscarEtiqueta(element.listaObjetos,etiqueta));
+        { 
+          ret = ret.concat( this.BuscarEtiqueta(element.listaObjetos,etiqueta));
+        }
+      }else{
+        if(element.identificador == etiqueta.Tipo.Valor){
+          ret.push(element);
+        }else{
+          if(element.listaObjetos.length > 0)
+          ret = ret.concat( this.BuscarEtiqueta(element.listaObjetos,etiqueta));
+        }
       }
+      
     });
+
     return ret;
   }
-  BuscarValorEtiqueta(xml:Objeto[],etiqueta:sentenciaXpath,onlyParamas:boolean ):string{
-    var result = "";
-    xml.forEach(element => {
-      if(element.identificador == etiqueta.Tipo.Valor){
-        if(etiqueta.Parametro!=null){
-          var temp = [];
-          temp.push(element);
-          result += this.ResolverPredicado(etiqueta,temp);
-        }else{
-          if(onlyParamas){
-            console.log('onlyParamas');
-            var temp = [];
-            temp.push(element);
-            result += this.GetAtributesXml(temp);
-          }else{
-            result += this.GetXmlText(element);
-          }
+ 
+  FiltrarOperacion(xml:Objeto[],etiqueta:sentenciaXpath):Objeto[]{
+    var result:Objeto[] = [];
+    if(etiqueta.Parametro!=null){
+      switch(etiqueta.Parametro.Tipo){
+        case TipoParametro.Operacion:{
           
-        }
         
-      }else{
-        result+= this.BuscarValorEtiqueta(element.listaObjetos,etiqueta,onlyParamas);
+          var ret = this.ResolverOperacion(etiqueta.Parametro,xml);
+          
+          if(ret.length <= 1){ // operaciones aritmeticas
+            if(xml.length >= ret[0]){
+              result.push(xml[ret[0]-1]);
+            }else{
+              result = [];
+            }
+          }else{ // operaciones logicas
+            let re = /\"/gi;
+            let ra = /\\/gi;
+            console.log('logica');
+            console.log(ret);
+            if(ret[4] == TipoParametro.Atributo){
+              xml.forEach(element => {
+                element.listaAtributos.forEach(atr => {
+                  if(ret[3] == 0 ){
+                    switch(ret[2]){
+                      case "=":{
+                        if(atr.valor.replace(re,'').replace(ra,'') == ret[1].toString().replace(re,'').replace(ra,''))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case "!=":{
+                        if(atr.valor.replace(re,'').replace(ra,'') != ret[1].toString().replace(re,'').replace(ra,''))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case "<":{
+                        if(Number(atr.valor) < Number(ret[1]))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case ">":{
+                        if(Number(atr.valor) > Number(ret[1]))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case ">=":{
+                        if(Number(atr.valor) >= Number(ret[1]))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case "<=":{
+                        if(Number(atr.valor) <= Number(ret[1]))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                    }
+                  }else{
+                    switch(ret[2]){
+                      case "=":{
+                        if(atr.valor.replace(re,'').replace(ra,'') == ret[0].toString().replace(re,'').replace(ra,''))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case "!=":{
+                        if(atr.valor.replace(re,'').replace(ra,'') != ret[0].toString().replace(re,'').replace(ra,''))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case "<":{
+                        if(Number(atr.valor) < Number(ret[0]))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case ">":{
+                        if(Number(atr.valor) > Number(ret[0]))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case "<=":{
+                        if(Number(atr.valor) <= Number(ret[0]))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                      case ">=":{
+                        if(Number(atr.valor) >= Number(ret[0]))
+                        {
+                          result .push(element);
+                        }
+                      }break;
+                    }
+                  }
+                });
+              });
+            }else if(ret[4] == TipoParametro.Funtion_Position){
+              if(ret[3] == 0 ){
+                switch(ret[2]){
+                  case "<":{
+                    for(var i = 1; i<Number(ret[1]);i++){
+                      if(xml.length>=i+1)
+                        result .push(xml[i-1]);
+                    }
+                  }break;
+                  case "<=":{
+                    for(var i = 1; i<Number(ret[1]);i++){
+                      if(xml.length>=i+1)
+                        result .push(xml[i-1]);
+                    }
+                  }break;
+                  case ">":{
+                    for(var i = Number(ret[1]+1); i<=xml.length;i++){
+                      if(xml.length>=i+1)
+                        result .push(xml[i-1]);
+                    }
+                  }break;
+                  case ">=":{
+                    for(var i = Number(ret[1]); i<=xml.length;i++){
+                      if(xml.length>=i+1)
+                        result .push(xml[i-1]);
+                    }
+                  }break;
+                  case "=":{
+                    if(xml.length>=Number(ret[1]))
+                        result.push(xml[Number(ret[1])-1]);
+                  }break;
+                  case "!=":{
+                    var int= 1;
+                    xml.forEach(element => {
+                      if(int != Number(ret[1]))
+                        result.push(element);
+                      int++;
+                    });
+                  }break;
+                }
+              }else{
+                switch(ret[2]){
+                  case "<":{
+                    for(var i = 1; i<Number(ret[0]);i++){
+                      if(xml.length >= i + 1)
+                        result .push(xml[i-1]);
+                    }
+                  }break;
+                  case "<=":{
+                    for(var i = 1; i <= Number(ret[0]);i++){
+                      if(xml.length >= i + 1)
+                        result .push(xml[i-1]);
+                    }
+                  }break;
+                  case ">":{
+                    for(var i = Number(ret[0]+1); i<=xml.length;i++){
+                      if(xml.length>=i+1)
+                        result .push(xml[i-1]);
+                    }
+                  }break;
+                  case ">=":{
+                    for(var i = Number(ret[0]); i<=xml.length;i++){
+                      if(xml.length>=i+1)
+                        result .push(xml[i-1]);
+                    }
+                  }break;
+                  case "=":{
+                    if(xml.length>=Number(ret[0]))
+                        result.push(xml[Number(ret[0])-1]);
+                  }break;
+                  case "!=":{
+                    var int= 1;
+                    xml.forEach(element => {
+                      if(int != Number(ret[0]))
+                        result.push(element);
+                      int++;
+                    });
+                  }break;
+                }
+              }
+            }else{
+              console.log('?');
+              console.log(xml);
+              xml.forEach(element => {
+                if(ret[3] == 0 ){
+                  switch(ret[2]){
+                    case "=":{
+                      element.listaObjetos.forEach(obj => {
+                        if(obj.texto.replace(re,'').replace(ra,'') == ret[1].toString().replace(re,'').replace(ra,''))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case "!=":{
+                      element.listaObjetos.forEach(obj => {
+                        if(obj.texto.replace(re,'').replace(ra,'') == ret[1].toString().replace(re,'').replace(ra,''))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case ">":{
+                      element.listaObjetos.forEach(obj => {
+                        if(Number(obj.texto) > Number(ret[1]))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case "<":{
+                      element.listaObjetos.forEach(obj => {
+                        if(Number(obj.texto) < Number(ret[1]))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case "<=":{
+                      element.listaObjetos.forEach(obj => {
+                        if(Number(obj.texto) <= Number(ret[1]))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case ">=":{
+                      element.listaObjetos.forEach(obj => {
+                        if(Number(obj.texto) >= Number(ret[1]))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                  }
+                }else{
+                  switch(ret[2]){
+                    case "=":{
+                      element.listaObjetos.forEach(obj => {
+                        if(obj.texto.replace(re,'').replace(ra,'') == ret[0].toString().replace(re,'').replace(ra,''))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case "!=":{
+                      element.listaObjetos.forEach(obj => {
+                        if(obj.texto.replace(re,'').replace(ra,'') != ret[0].toString().replace(re,'').replace(ra,''))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case ">":{
+                      element.listaObjetos.forEach(obj => {
+                        if(Number(obj.texto) > Number(ret[0]))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case "<":{
+                      element.listaObjetos.forEach(obj => {
+                        if(Number(obj.texto) < Number(ret[0]))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case "<=":{
+                      element.listaObjetos.forEach(obj => {
+                        if(Number(obj.texto) <= Number(ret[0]))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                    case ">=":{
+                      element.listaObjetos.forEach(obj => {
+                        if(Number(obj.texto) >= Number(ret[0]))
+                        {
+                          result .push(element);
+                        }
+                      });
+                    }break;
+                }
+                  
+                }
+              });
+            }
+            
+          }
+        }break;
+        case TipoParametro.Nodo:{
+          xml.forEach(element => {
+            element.listaObjetos.forEach(obj => {
+              if(obj.identificador == etiqueta.Tipo.Valor){
+                result.push(element);
+              }
+            });
+          });
+          
+        }break;
+        case TipoParametro.Atributo:{
+          xml.forEach(element => {
+            element.listaAtributos.forEach(atr => {
+              if(atr.identificador == etiqueta.Parametro.Valor){
+                result.push(element);
+              }
+            });
+          });
+          
+        }break;
+        case TipoParametro.Entero:{
+         
+          var indice = Number(etiqueta.Parametro.Valor);
+          if(xml.length >= indice && xml.length > 0)
+          {
+            result = [];
+            result.push(xml[indice-1]);
+          }else{
+            result = [];
+          }
+        }break;
+        case TipoParametro.Funtion_Last:{
+          
+          if(xml.length > 0)
+          {
+            result = [];
+            result.push(xml[xml.length-1]);
+          }else{
+            result = [];
+          }
+        }break;
       }
-    });
-    return result;
+      
+    }
+    return result ;
   }
   GetXmlText(xml:Objeto):string{
     var xmlText = "<" +xml.identificador;
