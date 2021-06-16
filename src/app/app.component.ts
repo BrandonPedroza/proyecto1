@@ -12,6 +12,9 @@ import { graphviz }  from 'd3-graphviz';
 import {crearArbolDot} from './AST/crearArbolDot';
 import {MatDialog} from '@angular/material/dialog';
 import {TablaSimbolosComponent} from '../app/Reportes/tabla-simbolos/tabla-simbolos.component';
+import { Error } from 'src/app/AST/Error';
+import {ErroresXMLComponent} from '../app/Reportes/errores-xml/errores-xml.component';
+import { ListaErrores } from 'src/app/AST/ListaErrores';
 declare var require: any;
 
 @Component({
@@ -1819,6 +1822,17 @@ console.log();
 			table += row;
 		}
     this.tablaXML=table;*/
+    }
+    generarReporteErroresXML(){
+      var xmlObject = this.astXML.parse(this.xmlText)[3] as ListaErrores;
+      //console.log(xmlObject.l_errores);
+    var lista = [];
+    lista.push(xmlObject.l_errores);
+    this.dialog.open(ErroresXMLComponent, {
+      data: lista,
+      maxHeight: '80%'
+    });
+
     }
 
 }

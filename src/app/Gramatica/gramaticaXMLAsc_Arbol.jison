@@ -73,7 +73,9 @@ BSL                                 "\\".
 {charLiteralMulti}                  return 'charLiteralMulti';
 //error lexico
 .                                   {
-                                        console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                                        lista_de_Errores.agregar_Error(new Error(contError, yylloc.first_line, yylloc.first_column + 1, "Lexico", "El caracter " + yytext + " no pertenece al lenguaje.")); 
+                                        contError++;
+                                        //console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
                                     }
 
 <<EOF>>                     return 'EOF'
@@ -89,8 +91,13 @@ BSL                                 "\\".
     const {Atributo} = require("../Expresiones/Atributo");
     const {Nodo_Arbol} = require("../AST/NodoArbol");
     const {ReporteGramatical} = require("../AST/ReporteGramatical");
-
+    const {Lista_Errores} = require("../AST/ListaErrores");
+    const {Error} =  require("../AST/Error");
+    
+    var lista_de_Errores = new Lista_Errores();
     var reportegramatical_ = new ReporteGramatical();
+    var contError=0;
+
 
 
 %}
@@ -121,7 +128,7 @@ START : RAICES EOF
             var root = new Nodo_Arbol("START","");
                     root.agregar_hijo($1[1]);
                     console.log("TODO BIEN, TODO CORRECTO :D!! (Version 2)");
-                    $$ = [$1[0], root,reportegramatical_];
+                    $$ = [$1[0], root,reportegramatical_,lista_de_Errores];
                     return $$;
         };/*
 INICIO RAICES EOF         { $$ = $2; return $$; }
@@ -178,7 +185,7 @@ OBJETO:
         $$ = [objeto,nodo_actual];
         
     } 
-    |  lt identifier LATRIBUTOS gt OBJETOS lt div identifier gt       
+    |  lt identifier LATRIBUTOS gt RAICES lt div identifier gt       
     { 
         reportegramatical_.agregar_Elemento(`OBJETO -> "<" id LATRIBUTOS ">" OBJETOS "<" / id>`,"OBJETO.val := new Objeto(id.val,LATRIBUTOS.val,OBJETOS.val)");
         nodo_actual = new Nodo_Arbol("UN_OBJETO","");
@@ -223,6 +230,27 @@ OBJETO:
         objeto = new Objeto($2,$2,'',@1.first_line, @1.first_column,$3[0],[]);
         $$ = [objeto,nodo_actual];
     }
+    | error ERR {
+        nodo_actual = new Nodo_Arbol("UN_OBJETO","");
+        nodo_actual.agregar_hijo(new Nodo_Arbol("ERROR","ERROR"));
+        lista_de_Errores.agregar_Error(new Error(contError, yylineno,this._$.first_column + 1, "Sintactico", "Se esperaba un OBJETO y se encontro "+ yytext)); 
+        contError++;
+        objeto = new Objeto("","",'',@1.first_line, @1.first_column,[],[],0);
+        $$ = [objeto,nodo_actual];
+        
+        } 
+;
+
+ERR :
+        gt 
+        | lt
+        | identifier
+        | div
+        | asig
+        | texto
+        | StringLiteral
+        | charLiteralMulti
+        | EOF
 ;
 
 
@@ -277,6 +305,16 @@ ATRIBUTO:
         atributo = new Atributo($1, $3, @1.first_line, @1.first_column);
         $$ = [atributo,nodo_actual]; 
     }
+    | error ERR
+    {
+        nodo_actual = new NodoArbol("ATRIBUTO","");
+        nodo_actual.agregar_hijo(new NodoArbol("ERROR","ERROR"));
+        lista_de_Errores.agregar_Error(new Error(contError, yylineno,this._$.first_column + 1, "Sintactico", "Se esperaba un OBJETO y se encontro "+ yytext)); 
+        contError++;
+        
+        $$ = [null,nodo_actual];
+               
+    } 
 ;
 
 STR_CHR:   StringLiteral               

@@ -20,11 +20,13 @@ import {} from '../app/Gramatica/xpathGramatica.js';
 import {TipoNodo,TipoOperador,TipoParametro} from '../app/Estructuras/tipificacion';
 import { TablaSimbolosComponent } from './Reportes/tabla-simbolos/tabla-simbolos.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ErroresXMLComponent } from './Reportes/errores-xml/errores-xml.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TablaSimbolosComponent
+    TablaSimbolosComponent,
+    ErroresXMLComponent
   ],
   imports: [
     BrowserModule,
