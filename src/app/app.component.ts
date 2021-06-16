@@ -1825,7 +1825,7 @@ console.log();
     }
     generarReporteErroresXML(){
       var xmlObject = this.astXML.parse(this.xmlText)[3] as ListaErrores;
-      //console.log(xmlObject.l_errores);
+      
     var lista = [];
     lista.push(xmlObject.l_errores);
     this.dialog.open(ErroresXMLComponent, {

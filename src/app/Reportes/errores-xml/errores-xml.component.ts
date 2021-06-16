@@ -5,10 +5,10 @@ import { Error } from 'src/app/AST/Error';
 
 
 export interface Data {
-  Fila: number;
-  Columna: number;
-  Tipo: string;
-  Descripcion: String;
+  Fila: any;
+  Columna: any;
+  Tipo: any;
+  Descripcion: any;
 }
 
 
@@ -27,9 +27,9 @@ export class ErroresXMLComponent implements OnInit {
   }
 
   FillData(data:Error[]){
-    console.log("----",data);
-    data.forEach(element => {
-      console.log("-+++--++",element);
+    
+    data[0].forEach(element => {
+    
       this.source.push({        
         Fila:element.fila_,
         Columna:element.columna_,        
@@ -37,7 +37,7 @@ export class ErroresXMLComponent implements OnInit {
         Descripcion:element.descripcion_});
         //this.FillData(element.listaObjetos);
       });
-      console.log("***",this.source);
+     
      
   }
 
