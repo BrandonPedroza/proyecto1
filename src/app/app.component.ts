@@ -466,10 +466,10 @@ export class AppComponent {
       }break;
       case TipoNodo.Funcion_Node :
       {
-        console.log('node');
-        console.log(xml);
-        xml = this.GetNodes(xml);
-        console.log(xml);
+        // console.log('node');
+        // console.log(xml);
+        // xml = this.GetNodes(xml);
+        // console.log(xml);
         if(raiz.Hijo ==null){
           xml.forEach(element => {
             result += this.GetXmlText(element);
